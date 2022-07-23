@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Colors } from "../config/theme";
 import BottomTab from "../components/bottomTab";
+import CategoryModal from "../components/categoryModal";
 
 const HomeScreen = (props) => {
   const [catModal, setCatModal] = useState(false);
@@ -69,6 +70,11 @@ const HomeScreen = (props) => {
 
   return (
     <View style={styles.container}>
+      <CategoryModal
+        show={catModal}
+        currentCate={currentCate}
+        setCatModal={setCatModal}
+      />
       <StatusBar backgroundColor={Colors.primary} style="light" />
       <View style={styles.headingContainer}>
         <Text style={styles.headingName}>Categories</Text>
@@ -76,13 +82,11 @@ const HomeScreen = (props) => {
           <Text style={styles.newCategory}>+ New Category</Text>
         </TouchableOpacity>
       </View>
-
       <FlatList
         style={{ marginTop: RFPercentage(2) }}
         data={categories}
         renderItem={(item) => categoryComp(item)}
       />
-
       <BottomTab navigation={props.navigation} />
     </View>
   );
@@ -142,7 +146,7 @@ const styles = StyleSheet.create({
   },
 
   categoryContent: {
-    width: "85%",
+    width: "90%",
     marginLeft: RFPercentage(2),
     flexDirection: "row",
     justifyContent: "space-between",
