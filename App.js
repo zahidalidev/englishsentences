@@ -1,45 +1,23 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { addUser, getAllUsers } from "./app/services/user";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { LogBox } from "react-native";
+
+import HomeScreen from "./app/screens/HomeScreen";
+
+// LogBox.ignoreAllLogs();
+
+const Stack = createStackNavigator();
 
 export default function App() {
-  const handleUser = async () => {
-    try {
-      const data = await addUser({
-        name: "zahid2",
-      });
-
-      console.log("add: ", data);
-    } catch (error) {
-      console.log("errro: ", error);
-    }
-  };
-  const handleUserAll = async () => {
-    try {
-      const data = await getAllUsers();
-
-      console.log("all: ", data);
-    } catch (error) {
-      console.log("errro: ", error);
-    }
-  };
-  // handleUser();
-  handleUserAll();
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <TouchableOpacity onPress={handleUser}>
-        <Text>Add User</Text>
-      </TouchableOpacity>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName="HomeScreen"
+      >
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
