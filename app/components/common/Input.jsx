@@ -13,13 +13,13 @@ const Input = ({ placeHolder, handleChange, style }) => (
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: "90%",
     justifyContent: "center",
     alignItems: "center",
   },
 
   input: {
-    width: "90%",
+    width: "100%",
     fontSize: RFPercentage(2.4),
   },
 });

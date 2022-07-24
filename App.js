@@ -4,7 +4,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LogBox } from "react-native";
 
 import Home from "./app/screens/HomeScreen";
-import Category from "./app/screens/CategoryScreen";
+import EditCategory from "./app/screens/EditCategoryScreen";
+import EditProduct from "./app/screens/EditProductScreen";
 
 // LogBox.ignoreAllLogs();
 
@@ -18,7 +19,8 @@ export default function App() {
         initialRouteName="Home"
       >
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Category" component={Category} />
+        <Stack.Screen name="EditCategory" component={EditCategory} />
+        <Stack.Screen name="EditProduct" component={EditProduct} />
       </Stack.Navigator>
     </NavigationContainer>
   );

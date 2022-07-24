@@ -18,8 +18,11 @@ import { Colors } from "../config/theme";
 
 const CategoryModal = ({ show, setCatModal, currentCate, navigation }) => {
   const handleCategory = (type) => {
-    if (type === "add") {
-      navigation.navigate("Category");
+    setCatModal(false);
+    if (type === "edit") {
+      navigation.navigate("EditCategory");
+    } else if (type === "add") {
+      navigation.navigate("EditProduct");
     }
   };
 

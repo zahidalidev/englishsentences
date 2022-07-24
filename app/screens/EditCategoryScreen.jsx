@@ -7,7 +7,7 @@ import { Colors } from "../config/theme";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
 
-const Category = ({ navigation }) => {
+const EditCategory = ({ navigation }) => {
   const [categName, setCategName] = useState("");
 
   return (
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Category;
+export default EditCategory;
