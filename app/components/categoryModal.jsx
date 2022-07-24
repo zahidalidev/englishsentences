@@ -16,7 +16,13 @@ import {
 
 import { Colors } from "../config/theme";
 
-const CategoryModal = ({ show, setCatModal, currentCate }) => {
+const CategoryModal = ({ show, setCatModal, currentCate, navigation }) => {
+  const handleCategory = (type) => {
+    if (type === "add") {
+      navigation.navigate("Category");
+    }
+  };
+
   return (
     <Modal transparent={true} visible={show}>
       <TouchableOpacity
@@ -34,6 +40,7 @@ const CategoryModal = ({ show, setCatModal, currentCate }) => {
             <Text style={styles.modalName}>{currentCate.name}</Text>
           </View>
           <TouchableOpacity
+            onPress={() => handleCategory("view")}
             activeOpacity={0.6}
             style={styles.cateContentContainer}
           >
@@ -45,6 +52,7 @@ const CategoryModal = ({ show, setCatModal, currentCate }) => {
             <Text style={styles.categHeading}>View category products</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => handleCategory("edit")}
             activeOpacity={0.6}
             style={styles.cateContentContainer}
           >
@@ -52,6 +60,7 @@ const CategoryModal = ({ show, setCatModal, currentCate }) => {
             <Text style={styles.categHeading}>Edit category details</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => handleCategory("add")}
             activeOpacity={0.6}
             style={styles.cateContentContainer}
           >
@@ -63,6 +72,7 @@ const CategoryModal = ({ show, setCatModal, currentCate }) => {
             <Text style={styles.categHeading}>Add category product</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={() => handleCategory("remove")}
             activeOpacity={0.6}
             style={styles.cateContentContainer}
           >

@@ -5,8 +5,8 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Colors } from "../config/theme";
-import BottomTab from "../components/bottomTab";
-import CategoryModal from "../components/categoryModal";
+import BottomTab from "../components/BottomTab";
+import CategoryModal from "../components/CategoryModal";
 
 const HomeScreen = (props) => {
   const [catModal, setCatModal] = useState(false);
@@ -74,6 +74,7 @@ const HomeScreen = (props) => {
         show={catModal}
         currentCate={currentCate}
         setCatModal={setCatModal}
+        navigation={props.navigation}
       />
       <StatusBar backgroundColor={Colors.primary} style="light" />
       <View style={styles.headingContainer}>
