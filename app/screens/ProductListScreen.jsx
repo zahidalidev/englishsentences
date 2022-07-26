@@ -10,8 +10,11 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Colors } from "../config/theme";
+import ProductModal from "../components/ProductModal";
 
 const ProductList = (props) => {
+  const [prodModal, setProdModal] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState({});
   const [currentCategory, setCurrentCategory] = useState({});
   const [products, setProducts] = useState([
     {
@@ -55,10 +58,15 @@ const ProductList = (props) => {
     setCurrentCategory(props.route.params.category);
   }, [props.route.params]);
 
+  const handleProductModel = (index) => {
+    setProdModal(true);
+    setCurrentProduct(products[index]);
+  };
+
   const productComp = ({ item, index }) => (
     <TouchableOpacity
       activeOpacity={0.6}
-      onPress={() => handleCategory(item)}
+      onPress={() => handleProductModel(index)}
       style={styles.categContaienr}
     >
       <View style={styles.productWrapper}>
@@ -84,6 +92,12 @@ const ProductList = (props) => {
 
   return (
     <View style={styles.container}>
+      <ProductModal
+        show={prodModal}
+        currentProduct={currentProduct}
+        setProdModal={setProdModal}
+        navigation={props.navigation}
+      />
       <View style={styles.categHeadWrapper}>
         <View style={styles.categHead}>
           <TouchableOpacity onPress={() => props.navigation.navigate("Home")}>
