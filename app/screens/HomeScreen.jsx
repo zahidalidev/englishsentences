@@ -13,22 +13,27 @@ const HomeScreen = (props) => {
   const [currentCate, setCurrentcat] = useState({});
   const [categories, setCategories] = useState([
     {
+      id: 0,
       name: "Appetizers",
       items: 4,
     },
     {
+      id: 1,
       name: "Appetizers",
       items: 4,
     },
     {
+      id: 2,
       name: "Appetizers",
       items: 4,
     },
     {
+      id: 3,
       name: "Appetizers",
       items: 4,
     },
     {
+      id: 4,
       name: "Appetizers",
       items: 4,
     },
@@ -39,8 +44,16 @@ const HomeScreen = (props) => {
     setCurrentcat(categories[index]);
   };
 
+  const handleCategory = (item) => {
+    props.navigation.navigate("ProductList", { category: item });
+  };
+
   const categoryComp = ({ item, index }) => (
-    <View style={styles.categContaienr}>
+    <TouchableOpacity
+      activeOpacity={0.6}
+      onPress={() => handleCategory(item)}
+      style={styles.categContaienr}
+    >
       <View style={styles.categWrapper}>
         <View style={styles.gridIconWrap}>
           <MaterialCommunityIcons
@@ -65,7 +78,7 @@ const HomeScreen = (props) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
