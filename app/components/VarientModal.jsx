@@ -16,15 +16,13 @@ import {
 
 import { Colors } from "../config/theme";
 
-const ProductModal = ({ show, setProdModal, currentProduct, navigation }) => {
+const VarientModal = ({ show, setProdModal, currentProduct, navigation }) => {
   const handleCategory = (type, params) => {
     setProdModal(false);
     if (type === "edit") {
       navigation.navigate("EditCategory");
-    } else if (type === "add") {
+    } else if (type === "remove") {
       navigation.navigate("EditProduct");
-    } else if (type === "view") {
-      navigation.navigate("ProductDetails", params);
     }
   };
 
@@ -41,28 +39,20 @@ const ProductModal = ({ show, setProdModal, currentProduct, navigation }) => {
           onPress={() => null}
         >
           <View style={styles.modalHeading}>
-            <Text style={styles.modalCat}>PRODUCT</Text>
-            <Text style={styles.modalName}>{currentProduct.name}</Text>
+            <Text style={styles.modalCat}>Variant</Text>
+            <Text style={styles.modalName}>₱159.00</Text>
           </View>
           <TouchableOpacity
             onPress={() => handleCategory("view", currentProduct)}
             activeOpacity={0.6}
             style={styles.cateContentContainer}
           >
-            <AntDesign
-              name="infocirlce"
-              color="#349b7c"
+            <Feather
+              name="edit"
+              color={Colors.green}
               size={RFPercentage(2.5)}
             />
-            <Text style={styles.categHeading}>View product variants</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleCategory("update")}
-            activeOpacity={0.6}
-            style={styles.cateContentContainer}
-          >
-            <Feather name="edit" color="#349b7c" size={RFPercentage(2.5)} />
-            <Text style={styles.categHeading}>Update product</Text>
+            <Text style={styles.categHeading}>Update variant</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => handleCategory("remove")}
@@ -74,7 +64,7 @@ const ProductModal = ({ show, setProdModal, currentProduct, navigation }) => {
               color={Colors.danger}
               size={RFPercentage(3)}
             />
-            <Text style={styles.categHeading}>Delete product</Text>
+            <Text style={styles.categHeading}>Remove variant</Text>
           </TouchableOpacity>
         </TouchableOpacity>
       </TouchableOpacity>
@@ -90,7 +80,7 @@ const styles = StyleSheet.create({
   },
 
   modalWrapper: {
-    height: "28%",
+    height: "22%",
     width: "100%",
     backgroundColor: Colors.white,
     elevation: 3,
@@ -110,7 +100,6 @@ const styles = StyleSheet.create({
 
   modalName: {
     fontSize: RFPercentage(2.4),
-    fontWeight: "500",
   },
 
   cateContentContainer: {
@@ -126,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProductModal;
+export default VarientModal;
