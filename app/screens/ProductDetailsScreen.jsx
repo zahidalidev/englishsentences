@@ -39,7 +39,9 @@ const ProductDetails = (props) => {
 
       <View style={styles.subContainer}>
         <Text style={styles.variationsHeading}>Variations</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate("EditProductVariant")}
+        >
           <Text style={styles.newVariant}>+ New Variant</Text>
         </TouchableOpacity>
       </View>

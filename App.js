@@ -8,6 +8,7 @@ import EditCategory from "./app/screens/EditCategoryScreen";
 import EditProduct from "./app/screens/EditProductScreen";
 import ProductList from "./app/screens/ProductListScreen";
 import ProductDetails from "./app/screens/ProductDetailsScreen";
+import EditProductVariant from "./app/screens/EditProductVariantScreen";
 
 // LogBox.ignoreAllLogs();
 
@@ -25,6 +26,10 @@ export default function App() {
         <Stack.Screen name="EditProduct" component={EditProduct} />
         <Stack.Screen name="ProductList" component={ProductList} />
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
+        <Stack.Screen
+          name="EditProductVariant"
+          component={EditProductVariant}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
