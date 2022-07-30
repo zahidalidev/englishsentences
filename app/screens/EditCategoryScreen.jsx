@@ -7,7 +7,7 @@ import { RFPercentage } from "react-native-responsive-fontsize";
 import { Colors, toastTheme } from "../config/theme";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
-import { addCategory } from "../services/firebase";
+import { addCategory, updateCategory } from "../services/firebase";
 import LoadingModal from "../components/common/LoadingModal";
 
 const EditCategory = (props) => {
@@ -18,7 +18,10 @@ const EditCategory = (props) => {
 
   useEffect(() => {
     setOperation(props.route.params.type);
-    console.log(props.route.params.type);
+    console.log(props.route.params);
+    if (props.route.params.type === "edit") {
+      setCategName(props.route.params.category.name);
+    }
   }, [props.route.params]);
 
   const handleCategory = async () => {
@@ -28,9 +31,11 @@ const EditCategory = (props) => {
         await addCategory({ name: categName });
         toast({ message: "Category added" });
       } else {
+        await updateCategory(categName, props.route.params.category.id);
+        toast({ message: "Category updated" });
       }
     } catch (error) {
-      toast({ message: "Error: Category not added!", ...toastTheme.error });
+      toast({ message: `Error: ${error}`, ...toastTheme.error });
     }
     setLoading(false);
   };
@@ -40,7 +45,7 @@ const EditCategory = (props) => {
       <LoadingModal show={loading} />
       <View style={styles.categHeadWrapper}>
         <View style={styles.categHead}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("Home")}>
             <MaterialCommunityIcons name="arrow-left" size={RFPercentage(3)} />
           </TouchableOpacity>
           <Text style={styles.categHeading}>New Category</Text>
@@ -51,6 +56,7 @@ const EditCategory = (props) => {
           placeHolder="Name"
           style={{ marginTop: RFPercentage(5) }}
           handleChange={(text) => setCategName(text)}
+          value={categName}
         />
       </View>
       <View style={styles.btnwrapper}>

@@ -20,7 +20,10 @@ const CategoryModal = ({ show, setCatModal, currentCate, navigation }) => {
   const handleCategory = (type) => {
     setCatModal(false);
     if (type === "edit") {
-      navigation.navigate("EditCategory");
+      navigation.navigate("EditCategory", {
+        type: "edit",
+        category: currentCate,
+      });
     } else if (type === "add") {
       navigation.navigate("EditProduct");
     }

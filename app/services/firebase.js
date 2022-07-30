@@ -10,10 +10,9 @@ if (firebase.apps.length === 0) {
 }
 
 const Firestore = firebase.firestore();
-Firestore.enablePersistence()
-  .then((data) => console.log("Offline successfully enable: ", data))
-  .catch((error) => console.log("Offline error: ", error));
-
+// Firestore.enablePersistence()
+//   .then((data) => console.log("Offline successfully enable: ", data))
+//   .catch((error) => console.log("Offline error: ", error));
 // Firestore.disableNetwork();
 // enableIndexedDbPersistence;
 // Subsequent queries will use persistence, if it was enabled successfully
@@ -24,31 +23,31 @@ const variantRef = Firestore.collection("variant");
 
 export const addCategory = async (body) => await categoryRef.add(body);
 
-export const updateCategory = async (body) => {
-  const snapshot = await categoryRef.where("id", "==", body.id).get();
-  if (snapshot.empty) {
-    return new Error(message);
-  }
-
-  let res = {};
-  snapshot.forEach((doc) => {
-    res = doc.data();
-    res.id = doc.id;
-  });
-
-  return await categoryRef.doc(res.id).update({ name: body.name });
-};
+export const updateCategory = async (name, id) =>
+  await categoryRef.doc(id).update({ name });
 
 export const getAllCategory = async () => {
-  let categories = [];
   const snapshot = await categoryRef.get();
-  snapshot.docs.map((doc, index) => {
+  let categories = [];
+  snapshot.docs.map(async (doc, index) => {
     let temp = doc.data();
     let tempObj = {};
     tempObj.name = temp.name;
     tempObj.id = doc.id;
+    tempObj.items = 1;
+
     categories.push(tempObj);
   });
 
   return categories;
+};
+
+export const getProductByCategory = async (id) => {
+  const snapshot2 = await productRef.where("categoryId", "==", id).get();
+  let products = [];
+  snapshot2.docs.map(async (doc, index) => {
+    products.push(doc.data());
+  });
+
+  return products;
 };

@@ -1,43 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View, StatusBar, FlatList } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useToast } from "react-native-styled-toast";
 
-import { Colors } from "../config/theme";
+import { Colors, toastTheme } from "../config/theme";
 import BottomTab from "../components/BottomTab";
 import CategoryModal from "../components/CategoryModal";
+import { getAllCategory, getProductByCategory } from "../services/firebase";
+import LoadingModal from "../components/common/LoadingModal";
 
 const HomeScreen = (props) => {
   const [catModal, setCatModal] = useState(false);
   const [currentCate, setCurrentcat] = useState({});
-  const [categories, setCategories] = useState([
-    {
-      id: 0,
-      name: "Appetizers",
-      items: 4,
-    },
-    {
-      id: 1,
-      name: "Appetizers",
-      items: 4,
-    },
-    {
-      id: 2,
-      name: "Appetizers",
-      items: 4,
-    },
-    {
-      id: 3,
-      name: "Appetizers",
-      items: 4,
-    },
-    {
-      id: 4,
-      name: "Appetizers",
-      items: 4,
-    },
-  ]);
+  const { toast } = useToast();
+  const [categories, setCategories] = useState([]);
+  const [loading, showLoading] = useState(false);
+
+  const handleGetAllCategory = async () => {
+    try {
+      showLoading(true);
+      const data = await getAllCategory();
+      const prodCar = [];
+      data.forEach(async (item, index) => {
+        const prod = await getProductByCategory(item.id);
+        data[index].items = prod.length;
+        prodCar.push(data[index]);
+        console.log(data[index]);
+        if (data.length == prodCar.length) setCategories(prodCar);
+      });
+    } catch (error) {
+      toast({ message: "Categories not found", ...toastTheme.error });
+    }
+    showLoading(false);
+  };
+
+  useEffect(() => {
+    handleGetAllCategory();
+  }, []);
 
   const handleCtegoryModel = (index) => {
     setCatModal(true);
@@ -89,6 +90,7 @@ const HomeScreen = (props) => {
         setCatModal={setCatModal}
         navigation={props.navigation}
       />
+      <LoadingModal show={loading} />
       <StatusBar backgroundColor={Colors.primary} style="light" />
       <View style={styles.headingContainer}>
         <Text style={styles.headingName}>Categories</Text>

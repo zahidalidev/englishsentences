@@ -1,12 +1,13 @@
 import { StyleSheet, TextInput, View } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
 
-const Input = ({ placeHolder, handleChange, style }) => (
+const Input = ({ placeHolder, handleChange, style, value }) => (
   <View style={styles.container}>
     <TextInput
       style={[styles.input, style]}
       placeholder={placeHolder}
       onChangeText={handleChange}
+      value={value}
     />
   </View>
 );
