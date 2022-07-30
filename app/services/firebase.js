@@ -44,8 +44,15 @@ export const getAllCategory = async () => {
   return categories;
 };
 
+export const addProduct = async (body) => await productRef.add(body);
+
+export const updateProduct = async (body, id) =>
+  await productRef.doc(id).update(body);
+
+export const removeProduct = async (id) => await productRef.doc(id).delete();
+
 export const getProductByCategory = async (id) => {
-  const snapshot2 = await productRef.where("categoryId", "==", id).get();
+  const snapshot2 = await productRef.where("catId", "==", id).get();
   let products = [];
   snapshot2.docs.map(async (doc, index) => {
     products.push(doc.data());

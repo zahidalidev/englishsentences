@@ -45,7 +45,6 @@ const HomeScreen = (props) => {
         const prod = await getProductByCategory(item.id);
         data[index].items = prod.length;
         prodCar.push(data[index]);
-        console.log(data[index]);
         if (data.length == prodCar.length) setCategories(prodCar);
       });
     } catch (error) {

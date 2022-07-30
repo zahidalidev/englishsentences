@@ -1,15 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { Picker } from "@react-native-picker/picker";
+import { useToast } from "react-native-styled-toast";
 
-import { Colors } from "../config/theme";
+import { Colors, toastTheme } from "../config/theme";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
+import {
+  addProduct,
+  getAllCategory,
+  getProductByCategory,
+  updateProduct,
+} from "../services/firebase";
+import LoadingModal from "../components/common/LoadingModal";
 
-const EditProduct = ({ navigation }) => {
+const EditProduct = (props) => {
   const [selectedCategory, setSelectedCategory] = useState();
+  const [loading, showLoading] = useState(false);
+  const [operation, setOperation] = useState("");
+  const { toast } = useToast();
+  const [categories, setCategories] = useState([]);
+
   const [productFields, setProductFields] = useState([
     {
       id: 0,
@@ -28,11 +41,64 @@ const EditProduct = ({ navigation }) => {
     tempFields[index].value = value;
   };
 
+  useEffect(() => {
+    setOperation(props.route.params.type);
+    handleGetAllCategory();
+    setSelectedCategory(props.route.params.category.id);
+    if (props.route.params.type === "edit") {
+      // setCategName(props.route.params.category.name);
+    }
+  }, [props.route.params]);
+
+  const handleGetAllCategory = async () => {
+    try {
+      showLoading(true);
+      const data = await getAllCategory();
+      const prodCar = [];
+      data.forEach(async (item, index) => {
+        const prod = await getProductByCategory(item.id);
+        data[index].items = prod.length;
+        prodCar.push(data[index]);
+        if (data.length == prodCar.length) setCategories(prodCar);
+      });
+    } catch (error) {
+      toast({ message: "Categories not found", ...toastTheme.error });
+    }
+    showLoading(false);
+  };
+
+  const handleProduct = async () => {
+    try {
+      showLoading(true);
+      const body = {
+        name: productFields[0].value,
+        description: productFields[1].value,
+        catId: selectedCategory,
+      };
+
+      if (operation === "add") {
+        if (productFields[0].value && productFields[1].value) {
+          await addProduct(body);
+          toast({ message: "Product added" });
+        } else {
+          toast({ message: "Please fill all the fields!", ...toastTheme.warn });
+        }
+      } else {
+        await updateProduct(body, props.route.params.product.id);
+        toast({ message: "Product updated" });
+      }
+    } catch (error) {
+      toast({ message: `Error: ${error}`, ...toastTheme.error });
+    }
+    showLoading(false);
+  };
+
   return (
     <View style={styles.container}>
+      <LoadingModal show={loading} />
       <View style={styles.categHeadWrapper}>
         <View style={styles.categHead}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("Home")}>
             <MaterialCommunityIcons name="arrow-left" size={RFPercentage(3)} />
           </TouchableOpacity>
           <Text style={styles.categHeading}>New Product</Text>
@@ -48,8 +114,9 @@ const EditProduct = ({ navigation }) => {
               setSelectedCategory(itemValue)
             }
           >
-            <Picker.Item def label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
+            {categories.map((item) => (
+              <Picker.Item key={item.id} label={item.name} value={item.id} />
+            ))}
           </Picker>
         </View>
       </View>
@@ -68,7 +135,7 @@ const EditProduct = ({ navigation }) => {
       ))}
 
       <View style={styles.btnwrapper}>
-        <Button name="Save Changes" width="90%" />
+        <Button name="Save Changes" handleSubmit={handleProduct} width="90%" />
       </View>
     </View>
   );

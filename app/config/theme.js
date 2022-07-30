@@ -25,4 +25,11 @@ export const toastTheme = {
     accentColor: "#FC0021",
     iconName: "info",
   },
+
+  warn: {
+    iconColor: "#e5ea59",
+    color: "#e5ea59",
+    accentColor: "#e5ea59",
+    iconName: "info",
+  },
 };

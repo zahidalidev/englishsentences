@@ -34,7 +34,10 @@ const CategoryModal = ({
         category: currentCate,
       });
     } else if (type === "add") {
-      navigation.navigate("EditProduct");
+      navigation.navigate("EditProduct", {
+        type: "add",
+        category: currentCate,
+      });
     } else if (type === "remove") {
       try {
         await removeCategory(currentCate.id);
