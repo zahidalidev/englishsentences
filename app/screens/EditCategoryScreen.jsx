@@ -1,17 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useToast } from "react-native-styled-toast";
 import { RFPercentage } from "react-native-responsive-fontsize";
 
-import { Colors } from "../config/theme";
+import { Colors, toastTheme } from "../config/theme";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
+import { addCategory } from "../services/firebase";
+import LoadingModal from "../components/common/LoadingModal";
 
-const EditCategory = ({ navigation }) => {
+const EditCategory = (props) => {
   const [categName, setCategName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [operation, setOperation] = useState("");
+  const { toast } = useToast();
+
+  useEffect(() => {
+    setOperation(props.route.params.type);
+    console.log(props.route.params.type);
+  }, [props.route.params]);
+
+  const handleCategory = async () => {
+    try {
+      setLoading(true);
+      if (operation === "add") {
+        await addCategory({ name: categName });
+        toast({ message: "Category added" });
+      } else {
+      }
+    } catch (error) {
+      toast({ message: "Error: Category not added!", ...toastTheme.error });
+    }
+    setLoading(false);
+  };
 
   return (
     <View style={styles.container}>
+      <LoadingModal show={loading} />
       <View style={styles.categHeadWrapper}>
         <View style={styles.categHead}>
           <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -20,14 +46,15 @@ const EditCategory = ({ navigation }) => {
           <Text style={styles.categHeading}>New Category</Text>
         </View>
       </View>
-      <Input
-        placeHolder="Name"
-        style={{ marginTop: RFPercentage(5) }}
-        handleChange={(text) => setCategName(text)}
-      />
-
+      <View style={{ width: "100%", alignItems: "center" }}>
+        <Input
+          placeHolder="Name"
+          style={{ marginTop: RFPercentage(5) }}
+          handleChange={(text) => setCategName(text)}
+        />
+      </View>
       <View style={styles.btnwrapper}>
-        <Button name="Save Changes" width="90%" />
+        <Button handleSubmit={handleCategory} name="Save Changes" width="90%" />
       </View>
     </View>
   );

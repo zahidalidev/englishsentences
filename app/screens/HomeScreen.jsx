@@ -92,7 +92,11 @@ const HomeScreen = (props) => {
       <StatusBar backgroundColor={Colors.primary} style="light" />
       <View style={styles.headingContainer}>
         <Text style={styles.headingName}>Categories</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            props.navigation.navigate("EditCategory", { type: "add" })
+          }
+        >
           <Text style={styles.newCategory}>+ New Category</Text>
         </TouchableOpacity>
       </View>

@@ -2,6 +2,8 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LogBox } from "react-native";
+import { ThemeProvider } from "styled-components";
+import { ToastProvider } from "react-native-styled-toast";
 
 import Home from "./app/screens/HomeScreen";
 import EditCategory from "./app/screens/EditCategoryScreen";
@@ -10,6 +12,7 @@ import ProductList from "./app/screens/ProductListScreen";
 import ProductDetails from "./app/screens/ProductDetailsScreen";
 import EditProductVariant from "./app/screens/EditProductVariantScreen";
 import Orders from "./app/screens/OrdersScreen";
+import { toastTheme } from "./app/config/theme";
 
 // LogBox.ignoreAllLogs();
 
@@ -17,22 +20,26 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{ headerShown: false }}
-        initialRouteName="Orders"
-      >
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="EditCategory" component={EditCategory} />
-        <Stack.Screen name="EditProduct" component={EditProduct} />
-        <Stack.Screen name="ProductList" component={ProductList} />
-        <Stack.Screen name="ProductDetails" component={ProductDetails} />
-        <Stack.Screen name="Orders" component={Orders} />
-        <Stack.Screen
-          name="EditProductVariant"
-          component={EditProductVariant}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider theme={toastTheme}>
+      <ToastProvider maxToasts={3} offset={10}>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{ headerShown: false }}
+            initialRouteName="Home"
+          >
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="EditCategory" component={EditCategory} />
+            <Stack.Screen name="EditProduct" component={EditProduct} />
+            <Stack.Screen name="ProductList" component={ProductList} />
+            <Stack.Screen name="ProductDetails" component={ProductDetails} />
+            <Stack.Screen name="Orders" component={Orders} />
+            <Stack.Screen
+              name="EditProductVariant"
+              component={EditProductVariant}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ToastProvider>
+    </ThemeProvider>
   );
 }

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   StatusBar,
   StyleSheet,
@@ -8,11 +7,9 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFPercentage } from "react-native-responsive-fontsize";
-import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
 
 import { Colors } from "../config/theme";
-import Input from "../components/common/Input";
 import Button from "../components/common/Button";
 
 const Orders = ({ navigation }) => {
