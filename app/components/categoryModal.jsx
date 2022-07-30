@@ -13,11 +13,20 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { useToast } from "react-native-styled-toast";
+import { removeCategory } from "../services/firebase";
 
-import { Colors } from "../config/theme";
+import { Colors, toastTheme } from "../config/theme";
 
-const CategoryModal = ({ show, setCatModal, currentCate, navigation }) => {
-  const handleCategory = (type) => {
+const CategoryModal = ({
+  show,
+  setCatModal,
+  currentCate,
+  navigation,
+  handleGetAllCategory,
+}) => {
+  const { toast } = useToast();
+  const handleCategory = async (type) => {
     setCatModal(false);
     if (type === "edit") {
       navigation.navigate("EditCategory", {
@@ -26,6 +35,15 @@ const CategoryModal = ({ show, setCatModal, currentCate, navigation }) => {
       });
     } else if (type === "add") {
       navigation.navigate("EditProduct");
+    } else if (type === "remove") {
+      try {
+        await removeCategory(currentCate.id);
+        toast({ message: "Category Deleted!" });
+        await handleGetAllCategory();
+        setCatModal(false);
+      } catch (error) {
+        toast({ message: `Deleting error: ${error}`, ...toastTheme.error });
+      }
     }
   };
 

@@ -26,6 +26,8 @@ export const addCategory = async (body) => await categoryRef.add(body);
 export const updateCategory = async (name, id) =>
   await categoryRef.doc(id).update({ name });
 
+export const removeCategory = async (id) => await categoryRef.doc(id).delete();
+
 export const getAllCategory = async () => {
   const snapshot = await categoryRef.get();
   let categories = [];

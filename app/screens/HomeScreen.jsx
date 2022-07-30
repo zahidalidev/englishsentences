@@ -1,5 +1,12 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, StatusBar, FlatList } from "react-native";
+import { useEffect, useState, useCallback } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  FlatList,
+  RefreshControl,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -17,6 +24,17 @@ const HomeScreen = (props) => {
   const { toast } = useToast();
   const [categories, setCategories] = useState([]);
   const [loading, showLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    handleGetAllCategory();
+    setRefreshing(false);
+  }, []);
+
+  useEffect(() => {
+    handleGetAllCategory();
+  }, []);
 
   const handleGetAllCategory = async () => {
     try {
@@ -35,10 +53,6 @@ const HomeScreen = (props) => {
     }
     showLoading(false);
   };
-
-  useEffect(() => {
-    handleGetAllCategory();
-  }, []);
 
   const handleCtegoryModel = (index) => {
     setCatModal(true);
@@ -89,6 +103,7 @@ const HomeScreen = (props) => {
         currentCate={currentCate}
         setCatModal={setCatModal}
         navigation={props.navigation}
+        handleGetAllCategory={handleGetAllCategory}
       />
       <LoadingModal show={loading} />
       <StatusBar backgroundColor={Colors.primary} style="light" />
@@ -103,6 +118,9 @@ const HomeScreen = (props) => {
         </TouchableOpacity>
       </View>
       <FlatList
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         style={{ marginTop: RFPercentage(2) }}
         data={categories}
         renderItem={(item) => categoryComp(item)}
