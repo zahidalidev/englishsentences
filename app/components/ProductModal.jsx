@@ -28,7 +28,7 @@ const ProductModal = ({
 }) => {
   const { toast } = useToast();
 
-  const handleProduct = async (type, params) => {
+  const handleProduct = async (type) => {
     setProdModal(false);
     if (type === "edit") {
       navigation.navigate("EditProduct", {
@@ -45,7 +45,7 @@ const ProductModal = ({
         toast({ message: `Deleting Error: ${error}`, ...toastTheme.error });
       }
     } else if (type === "view") {
-      navigation.navigate("ProductDetails", params);
+      navigation.navigate("ProductDetails", currentProduct);
     }
   };
 
