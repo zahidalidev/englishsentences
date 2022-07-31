@@ -15,6 +15,9 @@ const BottomTab = ({ navigation }) => {
 
   const handelTabNavigation = (name) => {
     setCurrentTab(name);
+    if (name === "shop") {
+      navigation.navigate("Orders");
+    }
   };
 
   return (
