@@ -14,7 +14,9 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 
-import { Colors } from "../config/theme";
+import { Colors, toastTheme } from "../config/theme";
+import { removeVariant } from "../services/firebase";
+import { useToast } from "react-native-styled-toast";
 
 const VarientModal = ({
   show,
@@ -24,9 +26,11 @@ const VarientModal = ({
   currentCategory,
   navigation,
 }) => {
-  const handleCategory = (type, params) => {
-    setProdModal(false);
+  const { toast } = useToast();
+
+  const handleCategory = async (type, params) => {
     if (type === "edit") {
+      setProdModal(false);
       navigation.navigate("EditProductVariant", {
         type: "edit",
         category: currentCategory,
@@ -34,8 +38,19 @@ const VarientModal = ({
         currentvariant: currentvariant,
       });
     } else if (type === "remove") {
-      navigation.navigate("EditProduct");
+      try {
+        await removeVariant(currentvariant.id);
+        toast({ message: "Variant removed" });
+        setProdModal(false);
+        navigation.navigate("ProductDetails", {
+          category: currentCategory,
+          product: currentProduct,
+        });
+      } catch (error) {
+        toast({ message: "Variant not removed!", ...toastTheme.error });
+      }
     }
+    setProdModal(false);
   };
 
   return (
