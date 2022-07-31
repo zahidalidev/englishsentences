@@ -45,7 +45,10 @@ const ProductModal = ({
         toast({ message: `Deleting Error: ${error}`, ...toastTheme.error });
       }
     } else if (type === "view") {
-      navigation.navigate("ProductDetails", currentProduct);
+      navigation.navigate("ProductDetails", {
+        product: currentProduct,
+        category: currentCategory,
+      });
     }
   };
 

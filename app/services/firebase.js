@@ -52,13 +52,32 @@ export const updateProduct = async (body, id) =>
 export const removeProduct = async (id) => await productRef.doc(id).delete();
 
 export const getProductByCategory = async (id) => {
-  const snapshot2 = await productRef.where("catId", "==", id).get();
+  const snapshot = await productRef.where("catId", "==", id).get();
   let products = [];
-  snapshot2.docs.map(async (doc, index) => {
+  snapshot.docs.map(async (doc, index) => {
     const tempObj = doc.data();
     tempObj.id = doc.id;
     products.push(tempObj);
   });
 
   return products;
+};
+
+export const addVariant = async (body) => await variantRef.add(body);
+
+export const updateVariant = async (body, id) =>
+  await variantRef.doc(id).update(body);
+
+export const removeVariant = async (id) => await variantRef.doc(id).delete();
+
+export const getVariantByProduct = async (id) => {
+  const snapshot = await variantRef.where("prodId", "==", id).get();
+  let Variants = [];
+  snapshot.docs.map(async (doc, index) => {
+    const tempObj = doc.data();
+    tempObj.id = doc.id;
+    Variants.push(tempObj);
+  });
+
+  return Variants;
 };

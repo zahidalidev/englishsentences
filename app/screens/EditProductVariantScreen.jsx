@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { Picker } from "@react-native-picker/picker";
 import { RadioButton } from "react-native-paper";
 
-import { Colors } from "../config/theme";
+import { Colors, toastTheme } from "../config/theme";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
+import { useToast } from "react-native-styled-toast";
+import LoadingModal from "../components/common/LoadingModal";
+import { addVariant, getProductByCategory } from "../services/firebase";
 
-const EditProductVariant = ({ navigation }) => {
-  const [selectedCategory, setSelectedCategory] = useState();
+const EditProductVariant = (props) => {
+  const { toast } = useToast();
+  const [loading, showLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [operation, setOperation] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState();
+  const [products, setProducts] = useState([]);
+  const [availability, setAvailability] = useState("available");
+  const [weighed, setWeighed] = useState("yes");
+
   const [variantFields, setVariantFields] = useState([
     {
       id: 0,
@@ -24,16 +35,61 @@ const EditProductVariant = ({ navigation }) => {
     },
   ]);
 
+  useEffect(() => {
+    setOperation(props.route.params.type);
+    getAllCategoryProducts(props.route.params.category.id);
+    setSelectedProduct(props.route.params.product.id);
+  }, [props.route.params]);
+
+  const getAllCategoryProducts = async (id) => {
+    try {
+      showLoading(true);
+      const products = await getProductByCategory(id);
+      setProducts(products);
+    } catch (error) {
+      toast({ message: "Products not found", ...toastTheme.error });
+    }
+    showLoading(false);
+  };
+
   const handleChange = (index, value) => {
     const tempFields = [...variantFields];
     tempFields[index].value = value;
   };
 
+  const handleVariant = async () => {
+    showLoading(true);
+    if (operation === "add") {
+      const body = {
+        prodId: selectedProduct,
+        name: variantFields[0].value || "Unammed",
+        price: parseFloat(variantFields[1].value),
+        availability,
+        weighed,
+      };
+      try {
+        await addVariant(body);
+        toast({ message: "Variant added" });
+      } catch (error) {
+        toast({ message: "Variant not added!", ...toastTheme.error });
+      }
+    }
+    showLoading(false);
+  };
+
   return (
     <View style={styles.container}>
+      <LoadingModal show={loading} />
       <View style={styles.categHeadWrapper}>
         <View style={styles.categHead}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <TouchableOpacity
+            onPress={() =>
+              props.navigation.navigate("ProductDetails", {
+                category: props.route.params.category,
+                product: props.route.params.product,
+              })
+            }
+          >
             <MaterialCommunityIcons name="arrow-left" size={RFPercentage(3)} />
           </TouchableOpacity>
           <Text style={styles.categHeading}>New Variant</Text>
@@ -44,13 +100,14 @@ const EditProductVariant = ({ navigation }) => {
         <View style={styles.pickerWrapper}>
           <Picker
             mode="dropdown"
-            selectedValue={selectedCategory}
+            selectedValue={selectedProduct}
             onValueChange={(itemValue, itemIndex) =>
-              setSelectedCategory(itemValue)
+              setSelectedProduct(itemValue)
             }
           >
-            <Picker.Item def label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
+            {products.map((item) => (
+              <Picker.Item key={item.id} label={item.name} value={item.id} />
+            ))}
           </Picker>
         </View>
       </View>
@@ -73,17 +130,15 @@ const EditProductVariant = ({ navigation }) => {
         <View style={styles.radioWrapper}>
           <Text style={styles.radioLabel}>Available</Text>
           <RadioButton
-            value="first"
-            status={"checked"}
-            // onPress={() => setChecked("first")}
+            status={availability === "available" ? "checked" : "unchecked"}
+            onPress={() => setAvailability("available")}
           />
         </View>
         <View style={styles.radioWrapper}>
           <Text style={styles.radioLabel}>Unavailable</Text>
           <RadioButton
-            value="first"
-            status={"checked"}
-            // onPress={() => setChecked("first")}
+            status={availability === "unavailable" ? "checked" : "unchecked"}
+            onPress={() => setAvailability("unavailable")}
           />
         </View>
       </View>
@@ -93,23 +148,21 @@ const EditProductVariant = ({ navigation }) => {
         <View style={styles.radioWrapper}>
           <Text style={styles.radioLabel}>yes</Text>
           <RadioButton
-            value="first"
-            status={"checked"}
-            // onPress={() => setChecked("first")}
+            status={weighed === "yes" ? "checked" : "unchecked"}
+            onPress={() => setWeighed("yes")}
           />
         </View>
         <View style={styles.radioWrapper}>
           <Text style={styles.radioLabel}>No</Text>
           <RadioButton
-            value="first"
-            status={"checked"}
-            // onPress={() => setChecked("first")}
+            status={weighed === "no" ? "checked" : "unchecked"}
+            onPress={() => setWeighed("no")}
           />
         </View>
       </View>
 
       <View style={styles.btnwrapper}>
-        <Button name="Save Changes" width="90%" />
+        <Button name="Save Changes" handleSubmit={handleVariant} width="90%" />
       </View>
     </View>
   );

@@ -6,21 +6,46 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Colors } from "../config/theme";
 import VarientModal from "../components/VarientModal";
+import { getVariantByProduct } from "../services/firebase";
+import { useToast } from "react-native-styled-toast";
+import LoadingModal from "../components/common/LoadingModal";
 
 const ProductDetails = (props) => {
   const [currentProduct, setCurrentProduct] = useState({});
   const [prodModal, setProdModal] = useState(false);
+  const [loading, showLoading] = useState(false);
+  const { toast } = useToast();
+  const [variants, setVariants] = useState([]);
 
-  const getCurrentProductsVariants = (product) => {
+  const handleCurrentProductsVariants = async (product) => {
+    showLoading(true);
     setCurrentProduct(product);
+    try {
+      const data = await getVariantByProduct(product.id);
+      setVariants(data);
+    } catch (error) {
+      toast({ message: "Products variants not found!", ...toastTheme.error });
+    }
+    showLoading(false);
   };
 
   useEffect(() => {
-    getCurrentProductsVariants(props.route.params);
+    handleCurrentProductsVariants(props.route.params.product);
   }, [props.route.params]);
+
+  const handleProductVariants = (type) => {
+    if (type === "add") {
+      props.navigation.navigate("EditProductVariant", {
+        type: "add",
+        category: props.route.params.category,
+        product: props.route.params.product,
+      });
+    }
+  };
 
   return (
     <View style={styles.container}>
+      <LoadingModal show={loading} />
       <VarientModal
         show={prodModal}
         currentProduct={currentProduct}
@@ -29,7 +54,13 @@ const ProductDetails = (props) => {
       />
       <View style={styles.subContainer}>
         <Text style={styles.mainHeading}>{currentProduct.name}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            props.navigation.navigate("ProductList", {
+              category: props.route.params.category,
+            })
+          }
+        >
           <Ionicons name="close" size={RFPercentage(3.3)} color={Colors.grey} />
         </TouchableOpacity>
       </View>
@@ -39,35 +70,35 @@ const ProductDetails = (props) => {
 
       <View style={styles.subContainer}>
         <Text style={styles.variationsHeading}>Variations</Text>
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate("EditProductVariant")}
-        >
+        <TouchableOpacity onPress={() => handleProductVariants("add")}>
           <Text style={styles.newVariant}>+ New Variant</Text>
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={() => setProdModal(true)}
-        style={styles.subContainer}
-      >
-        <View style={styles.priceWrapper}>
-          <MaterialCommunityIcons
-            size={RFPercentage(2.5)}
-            color={Colors.green}
-            name="check"
-          />
-          <Text style={styles.price}>Unammed</Text>
-        </View>
-        <View style={styles.priceWrapper}>
-          <MaterialCommunityIcons
-            size={RFPercentage(2)}
-            color={Colors.grey}
-            name="currency-php"
-          />
-          <Text style={styles.price}>158.00</Text>
-        </View>
-      </TouchableOpacity>
+      {variants.map((variant) => (
+        <TouchableOpacity
+          key={variant.id}
+          activeOpacity={0.6}
+          onPress={() => setProdModal(true)}
+          style={styles.subContainer}
+        >
+          <View style={styles.priceWrapper}>
+            <MaterialCommunityIcons
+              size={RFPercentage(2.5)}
+              color={
+                variant.availability === "available"
+                  ? Colors.green
+                  : Colors.danger
+              }
+              name={variant.availability === "available" ? "check" : "close"}
+            />
+            <Text style={styles.price}>{variant.name}</Text>
+          </View>
+          <View style={styles.priceWrapper}>
+            <Text style={styles.price}>₱ {variant.price}</Text>
+          </View>
+        </TouchableOpacity>
+      ))}
 
       <View style={[styles.subContainer, styles.recentOrder]}>
         <Text style={styles.variationsHeading}>Recent Orders</Text>
