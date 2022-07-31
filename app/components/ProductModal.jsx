@@ -14,15 +14,36 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 
-import { Colors } from "../config/theme";
+import { Colors, toastTheme } from "../config/theme";
+import { removeProduct } from "../services/firebase";
+import { useToast } from "react-native-styled-toast";
 
-const ProductModal = ({ show, setProdModal, currentProduct, navigation }) => {
-  const handleCategory = (type, params) => {
+const ProductModal = ({
+  show,
+  setProdModal,
+  currentProduct,
+  currentCategory,
+  navigation,
+  onRefreshProductList,
+}) => {
+  const { toast } = useToast();
+
+  const handleProduct = async (type, params) => {
     setProdModal(false);
     if (type === "edit") {
-      navigation.navigate("EditCategory");
-    } else if (type === "add") {
-      navigation.navigate("EditProduct");
+      navigation.navigate("EditProduct", {
+        type: "edit",
+        product: currentProduct,
+        category: currentCategory,
+      });
+    } else if (type === "remove") {
+      try {
+        await removeProduct(currentProduct.id);
+        onRefreshProductList();
+        toast({ message: "Product Removed!" });
+      } catch (error) {
+        toast({ message: `Deleting Error: ${error}`, ...toastTheme.error });
+      }
     } else if (type === "view") {
       navigation.navigate("ProductDetails", params);
     }
@@ -45,7 +66,7 @@ const ProductModal = ({ show, setProdModal, currentProduct, navigation }) => {
             <Text style={styles.modalName}>{currentProduct.name}</Text>
           </View>
           <TouchableOpacity
-            onPress={() => handleCategory("view", currentProduct)}
+            onPress={() => handleProduct("view")}
             activeOpacity={0.6}
             style={styles.cateContentContainer}
           >
@@ -57,7 +78,7 @@ const ProductModal = ({ show, setProdModal, currentProduct, navigation }) => {
             <Text style={styles.categHeading}>View product variants</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleCategory("update")}
+            onPress={() => handleProduct("edit")}
             activeOpacity={0.6}
             style={styles.cateContentContainer}
           >
@@ -65,7 +86,7 @@ const ProductModal = ({ show, setProdModal, currentProduct, navigation }) => {
             <Text style={styles.categHeading}>Update product</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleCategory("remove")}
+            onPress={() => handleProduct("remove")}
             activeOpacity={0.6}
             style={styles.cateContentContainer}
           >

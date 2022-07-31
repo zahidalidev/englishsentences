@@ -34,7 +34,7 @@ const HomeScreen = (props) => {
 
   useEffect(() => {
     handleGetAllCategory();
-  }, []);
+  }, [props.route.params]);
 
   const handleGetAllCategory = async () => {
     try {
@@ -59,7 +59,9 @@ const HomeScreen = (props) => {
   };
 
   const handleCategory = (item) => {
-    props.navigation.navigate("ProductList", { category: item });
+    props.navigation.navigate("ProductList", {
+      category: item,
+    });
   };
 
   const categoryComp = ({ item, index }) => (

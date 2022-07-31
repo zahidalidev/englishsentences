@@ -22,6 +22,7 @@ const EditProduct = (props) => {
   const [operation, setOperation] = useState("");
   const { toast } = useToast();
   const [categories, setCategories] = useState([]);
+  const [currentProduct, setCurrentProduct] = useState({});
 
   const [productFields, setProductFields] = useState([
     {
@@ -39,6 +40,7 @@ const EditProduct = (props) => {
   const handleChange = (index, value) => {
     const tempFields = [...productFields];
     tempFields[index].value = value;
+    setProductFields(tempFields);
   };
 
   useEffect(() => {
@@ -46,7 +48,10 @@ const EditProduct = (props) => {
     handleGetAllCategory();
     setSelectedCategory(props.route.params.category.id);
     if (props.route.params.type === "edit") {
-      // setCategName(props.route.params.category.name);
+      const prod = props.route.params.product;
+      setCurrentProduct(prod);
+      handleChange(0, prod.name);
+      handleChange(1, prod.description);
     }
   }, [props.route.params]);
 
@@ -84,7 +89,8 @@ const EditProduct = (props) => {
           toast({ message: "Please fill all the fields!", ...toastTheme.warn });
         }
       } else {
-        await updateProduct(body, props.route.params.product.id);
+        console.log("jjjs: ", selectedCategory);
+        await updateProduct(body, currentProduct.id);
         toast({ message: "Product updated" });
       }
     } catch (error) {
@@ -124,6 +130,7 @@ const EditProduct = (props) => {
         <Input
           key={item.id.toString()}
           placeHolder={item.placeHolder}
+          value={item.value}
           style={{
             marginTop: RFPercentage(3),
             borderBottomColor: Colors.grey,

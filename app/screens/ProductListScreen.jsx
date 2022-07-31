@@ -1,62 +1,51 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  RefreshControl,
 } from "react-native";
 import { RFPercentage } from "react-native-responsive-fontsize";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useToast } from "react-native-styled-toast";
 
-import { Colors } from "../config/theme";
+import { Colors, toastTheme } from "../config/theme";
 import ProductModal from "../components/ProductModal";
+import { getProductByCategory } from "../services/firebase";
+import LoadingModal from "../components/common/LoadingModal";
 
 const ProductList = (props) => {
   const [prodModal, setProdModal] = useState(false);
   const [currentProduct, setCurrentProduct] = useState({});
   const [currentCategory, setCurrentCategory] = useState({});
-  const [products, setProducts] = useState([
-    {
-      id: 0,
-      name: "Fish Lumpia",
-      price: 159,
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    },
-    {
-      id: 1,
-      name: "Fish Lumpia",
-      price: 159,
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    },
-    {
-      id: 2,
-      name: "Fish Lumpia",
-      price: 159,
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    },
-    {
-      id: 3,
-      name: "Fish Lumpia",
-      price: 159,
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    },
-    {
-      id: 4,
-      name: "Fish Lumpia",
-      price: 159,
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    },
-  ]);
+  const [loading, showLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const { toast } = useToast();
+  const [products, setProducts] = useState([]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getAllCategoryProducts(props.route.params.category.id);
+    setRefreshing(false);
+  }, []);
 
   useEffect(() => {
     setCurrentCategory(props.route.params.category);
+    getAllCategoryProducts(props.route.params.category.id);
   }, [props.route.params]);
+
+  const getAllCategoryProducts = async (id) => {
+    try {
+      showLoading(true);
+      const products = await getProductByCategory(id);
+      setProducts(products);
+    } catch (error) {
+      toast({ message: "Products not found", ...toastTheme.error });
+    }
+    showLoading(false);
+  };
 
   const handleProductModel = (index) => {
     setProdModal(true);
@@ -78,12 +67,7 @@ const ProductList = (props) => {
             </Text>
           </View>
           <View style={styles.priceWrapper}>
-            <MaterialCommunityIcons
-              size={RFPercentage(2)}
-              color={Colors.primary}
-              name="currency-php"
-            />
-            <Text style={styles.price}>{item.price}.00</Text>
+            {item.price && <Text style={styles.price}>₱ {item.price}</Text>}
           </View>
         </View>
       </View>
@@ -92,9 +76,12 @@ const ProductList = (props) => {
 
   return (
     <View style={styles.container}>
+      <LoadingModal show={loading} />
       <ProductModal
         show={prodModal}
         currentProduct={currentProduct}
+        currentCategory={currentCategory}
+        onRefreshProductList={onRefresh}
         setProdModal={setProdModal}
         navigation={props.navigation}
       />
@@ -107,6 +94,9 @@ const ProductList = (props) => {
         </View>
       </View>
       <FlatList
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         style={{ marginTop: RFPercentage(2) }}
         data={products}
         renderItem={(item) => productComp(item)}

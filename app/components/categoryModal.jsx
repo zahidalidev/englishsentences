@@ -26,6 +26,7 @@ const CategoryModal = ({
   handleGetAllCategory,
 }) => {
   const { toast } = useToast();
+
   const handleCategory = async (type) => {
     setCatModal(false);
     if (type === "edit") {
@@ -43,10 +44,13 @@ const CategoryModal = ({
         await removeCategory(currentCate.id);
         toast({ message: "Category Deleted!" });
         await handleGetAllCategory();
-        setCatModal(false);
       } catch (error) {
         toast({ message: `Deleting error: ${error}`, ...toastTheme.error });
       }
+    } else if (type === "view") {
+      navigation.navigate("ProductList", {
+        category: currentCate,
+      });
     }
   };
 

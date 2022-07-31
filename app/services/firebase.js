@@ -55,7 +55,9 @@ export const getProductByCategory = async (id) => {
   const snapshot2 = await productRef.where("catId", "==", id).get();
   let products = [];
   snapshot2.docs.map(async (doc, index) => {
-    products.push(doc.data());
+    const tempObj = doc.data();
+    tempObj.id = doc.id;
+    products.push(tempObj);
   });
 
   return products;
