@@ -10,7 +10,11 @@ import Input from "../components/common/Input";
 import Button from "../components/common/Button";
 import { useToast } from "react-native-styled-toast";
 import LoadingModal from "../components/common/LoadingModal";
-import { addVariant, getProductByCategory } from "../services/firebase";
+import {
+  addVariant,
+  getProductByCategory,
+  updateVariant,
+} from "../services/firebase";
 
 const EditProductVariant = (props) => {
   const { toast } = useToast();
@@ -39,6 +43,13 @@ const EditProductVariant = (props) => {
     setOperation(props.route.params.type);
     getAllCategoryProducts(props.route.params.category.id);
     setSelectedProduct(props.route.params.product.id);
+    if (props.route.params.type === "edit") {
+      const currentvariant = props.route.params.currentvariant;
+      handleChange(0, currentvariant.name);
+      handleChange(1, currentvariant.price.toString());
+      setAvailability(currentvariant.availability);
+      setWeighed(currentvariant.weighed);
+    }
   }, [props.route.params]);
 
   const getAllCategoryProducts = async (id) => {
@@ -55,23 +66,31 @@ const EditProductVariant = (props) => {
   const handleChange = (index, value) => {
     const tempFields = [...variantFields];
     tempFields[index].value = value;
+    setVariantFields(tempFields);
   };
 
   const handleVariant = async () => {
     showLoading(true);
+    const body = {
+      prodId: selectedProduct,
+      name: variantFields[0].value || "Unammed",
+      price: parseFloat(variantFields[1].value).toFixed(2),
+      availability,
+      weighed,
+    };
     if (operation === "add") {
-      const body = {
-        prodId: selectedProduct,
-        name: variantFields[0].value || "Unammed",
-        price: parseFloat(variantFields[1].value),
-        availability,
-        weighed,
-      };
       try {
         await addVariant(body);
         toast({ message: "Variant added" });
       } catch (error) {
         toast({ message: "Variant not added!", ...toastTheme.error });
+      }
+    } else {
+      try {
+        await updateVariant(body, props.route.params.currentvariant.id);
+        toast({ message: "Variant updated" });
+      } catch (error) {
+        toast({ message: "Variant not updated!", ...toastTheme.error });
       }
     }
     showLoading(false);
@@ -113,6 +132,7 @@ const EditProductVariant = (props) => {
       </View>
       {variantFields.map((item) => (
         <Input
+          value={item.value}
           key={item.id.toString()}
           placeHolder={item.placeHolder}
           style={{

@@ -16,6 +16,7 @@ const ProductDetails = (props) => {
   const [loading, showLoading] = useState(false);
   const { toast } = useToast();
   const [variants, setVariants] = useState([]);
+  const [currentvariant, setCurrentVariant] = useState({});
 
   const handleCurrentProductsVariants = async (product) => {
     showLoading(true);
@@ -38,9 +39,14 @@ const ProductDetails = (props) => {
       props.navigation.navigate("EditProductVariant", {
         type: "add",
         category: props.route.params.category,
-        product: props.route.params.product,
+        product: currentProduct,
       });
     }
+  };
+
+  const handleCurrentVariant = (variant) => {
+    setCurrentVariant(variant);
+    setProdModal(true);
   };
 
   return (
@@ -48,7 +54,9 @@ const ProductDetails = (props) => {
       <LoadingModal show={loading} />
       <VarientModal
         show={prodModal}
+        currentvariant={currentvariant}
         currentProduct={currentProduct}
+        currentCategory={props.route.params.category}
         setProdModal={setProdModal}
         navigation={props.navigation}
       />
@@ -79,7 +87,7 @@ const ProductDetails = (props) => {
         <TouchableOpacity
           key={variant.id}
           activeOpacity={0.6}
-          onPress={() => setProdModal(true)}
+          onPress={() => handleCurrentVariant(variant)}
           style={styles.subContainer}
         >
           <View style={styles.priceWrapper}>

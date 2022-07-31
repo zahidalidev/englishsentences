@@ -16,11 +16,23 @@ import {
 
 import { Colors } from "../config/theme";
 
-const VarientModal = ({ show, setProdModal, currentProduct, navigation }) => {
+const VarientModal = ({
+  show,
+  setProdModal,
+  currentvariant,
+  currentProduct,
+  currentCategory,
+  navigation,
+}) => {
   const handleCategory = (type, params) => {
     setProdModal(false);
     if (type === "edit") {
-      navigation.navigate("EditCategory");
+      navigation.navigate("EditProductVariant", {
+        type: "edit",
+        category: currentCategory,
+        product: currentProduct,
+        currentvariant: currentvariant,
+      });
     } else if (type === "remove") {
       navigation.navigate("EditProduct");
     }
@@ -43,7 +55,7 @@ const VarientModal = ({ show, setProdModal, currentProduct, navigation }) => {
             <Text style={styles.modalName}>₱159.00</Text>
           </View>
           <TouchableOpacity
-            onPress={() => handleCategory("view", currentProduct)}
+            onPress={() => handleCategory("edit", currentProduct)}
             activeOpacity={0.6}
             style={styles.cateContentContainer}
           >
