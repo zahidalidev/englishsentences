@@ -13,7 +13,10 @@ import { useToast } from "react-native-styled-toast";
 
 import { Colors, toastTheme } from "../config/theme";
 import ProductModal from "../components/ProductModal";
-import { getProductByCategory } from "../services/firebase";
+import {
+  getProductByCategory,
+  getVariantByProduct,
+} from "../services/firebase";
 import LoadingModal from "../components/common/LoadingModal";
 
 const ProductList = (props) => {
@@ -40,11 +43,25 @@ const ProductList = (props) => {
     try {
       showLoading(true);
       const products = await getProductByCategory(id);
-      setProducts(products);
+
+      const tempProduct = [];
+      products.forEach(async (item, index) => {
+        products[index].price = await handleCurrentProductsVariants(item.id);
+        tempProduct.push(products[index]);
+
+        if (products.length == tempProduct.length) setProducts(tempProduct);
+      });
     } catch (error) {
       toast({ message: "Products not found", ...toastTheme.error });
     }
     showLoading(false);
+  };
+
+  const handleCurrentProductsVariants = async (id) => {
+    try {
+      const data = await getVariantByProduct(id);
+      return data[0].price;
+    } catch (error) {}
   };
 
   const handleProductModel = (index) => {
@@ -60,7 +77,7 @@ const ProductList = (props) => {
     >
       <View style={styles.productWrapper}>
         <View style={styles.productContent}>
-          <View>
+          <View style={{ width: "90%" }}>
             <Text style={styles.productName}>{item.name}</Text>
             <Text numberOfLines={2} style={styles.productDescription}>
               {item.description}

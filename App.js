@@ -14,7 +14,7 @@ import EditProductVariant from "./app/screens/EditProductVariantScreen";
 import Orders from "./app/screens/OrdersScreen";
 import { toastTheme } from "./app/config/theme";
 
-// LogBox.ignoreAllLogs();
+LogBox.ignoreAllLogs();
 
 const Stack = createStackNavigator();
 

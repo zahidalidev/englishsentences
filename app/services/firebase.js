@@ -10,10 +10,11 @@ if (firebase.apps.length === 0) {
 }
 
 const Firestore = firebase.firestore();
-// Firestore.enablePersistence()
-//   .then((data) => console.log("Offline successfully enable: ", data))
-//   .catch((error) => console.log("Offline error: ", error));
+Firestore.enablePersistence()
+  .then((data) => console.log("Offline successfully enable: ", data))
+  .catch((error) => console.log("Offline error: ", error));
 // Firestore.disableNetwork();
+
 // enableIndexedDbPersistence;
 // Subsequent queries will use persistence, if it was enabled successfully
 
