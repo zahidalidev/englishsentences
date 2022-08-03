@@ -17,6 +17,7 @@ import { useToast } from "react-native-styled-toast";
 import { removeCategory } from "../services/firebase";
 
 import { Colors, toastTheme } from "../config/theme";
+import isConnected from "../utils/checkNetwork";
 
 const CategoryModal = ({
   show,
@@ -41,7 +42,12 @@ const CategoryModal = ({
       });
     } else if (type === "remove") {
       try {
-        await removeCategory(currentCate.id);
+        const conn = await isConnected();
+        if (conn) {
+          await removeCategory(currentCate.id);
+        } else {
+          removeCategory(currentCate.id);
+        }
         toast({ message: "Category Deleted!" });
         await handleGetAllCategory();
       } catch (error) {

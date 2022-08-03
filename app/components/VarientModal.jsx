@@ -17,6 +17,7 @@ import {
 import { Colors, toastTheme } from "../config/theme";
 import { removeVariant } from "../services/firebase";
 import { useToast } from "react-native-styled-toast";
+import isConnected from "../utils/checkNetwork";
 
 const VarientModal = ({
   show,
@@ -39,7 +40,12 @@ const VarientModal = ({
       });
     } else if (type === "remove") {
       try {
-        await removeVariant(currentvariant.id);
+        const conn = await isConnected();
+        if (conn) {
+          await removeVariant(currentvariant.id);
+        } else {
+          removeVariant(currentvariant.id);
+        }
         toast({ message: "Variant removed" });
         setProdModal(false);
         navigation.navigate("ProductDetails", {

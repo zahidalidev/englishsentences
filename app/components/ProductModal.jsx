@@ -17,6 +17,7 @@ import {
 import { Colors, toastTheme } from "../config/theme";
 import { removeProduct } from "../services/firebase";
 import { useToast } from "react-native-styled-toast";
+import isConnected from "../utils/checkNetwork";
 
 const ProductModal = ({
   show,
@@ -38,7 +39,12 @@ const ProductModal = ({
       });
     } else if (type === "remove") {
       try {
-        await removeProduct(currentProduct.id);
+        const conn = await isConnected();
+        if (conn) {
+          await removeProduct(currentProduct.id);
+        } else {
+          removeProduct(currentProduct.id);
+        }
         onRefreshProductList();
         toast({ message: "Product Removed!" });
       } catch (error) {

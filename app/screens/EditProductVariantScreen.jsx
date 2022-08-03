@@ -15,11 +15,11 @@ import {
   getProductByCategory,
   updateVariant,
 } from "../services/firebase";
+import isConnected from "../utils/checkNetwork";
 
 const EditProductVariant = (props) => {
   const { toast } = useToast();
   const [loading, showLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   const [operation, setOperation] = useState("");
   const [selectedProduct, setSelectedProduct] = useState();
   const [products, setProducts] = useState([]);
@@ -78,16 +78,25 @@ const EditProductVariant = (props) => {
       availability,
       weighed,
     };
+    const conn = await isConnected();
     if (operation === "add") {
       try {
-        await addVariant(body);
+        if (conn) {
+          await addVariant(body);
+        } else {
+          addVariant(body);
+        }
         toast({ message: "Variant added" });
       } catch (error) {
         toast({ message: "Variant not added!", ...toastTheme.error });
       }
     } else {
       try {
-        await updateVariant(body, props.route.params.currentvariant.id);
+        if (conn) {
+          await updateVariant(body, props.route.params.currentvariant.id);
+        } else {
+          updateVariant(body, props.route.params.currentvariant.id);
+        }
         toast({ message: "Variant updated" });
       } catch (error) {
         toast({ message: "Variant not updated!", ...toastTheme.error });

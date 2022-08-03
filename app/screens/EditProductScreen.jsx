@@ -15,6 +15,7 @@ import {
   updateProduct,
 } from "../services/firebase";
 import LoadingModal from "../components/common/LoadingModal";
+import isConnected from "../utils/checkNetwork";
 
 const EditProduct = (props) => {
   const [selectedCategory, setSelectedCategory] = useState();
@@ -81,16 +82,25 @@ const EditProduct = (props) => {
         catId: selectedCategory,
       };
 
+      const conn = await isConnected();
+
       if (operation === "add") {
         if (productFields[0].value && productFields[1].value) {
-          await addProduct(body);
+          if (conn) {
+            await addProduct(body);
+          } else {
+            addProduct(body);
+          }
           toast({ message: "Product added" });
         } else {
           toast({ message: "Please fill all the fields!", ...toastTheme.warn });
         }
       } else {
-        console.log("jjjs: ", selectedCategory);
-        await updateProduct(body, currentProduct.id);
+        if (conn) {
+          await updateProduct(body, currentProduct.id);
+        } else {
+          updateProduct(body, currentProduct.id);
+        }
         toast({ message: "Product updated" });
       }
     } catch (error) {

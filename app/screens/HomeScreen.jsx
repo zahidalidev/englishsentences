@@ -64,7 +64,7 @@ const HomeScreen = (props) => {
     });
   };
 
-  const categoryComp = ({ item, index }) => (
+  const categoryComp = (item, index) => (
     <TouchableOpacity
       activeOpacity={0.6}
       onPress={() => handleCategory(item)}
@@ -122,9 +122,9 @@ const HomeScreen = (props) => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        style={{ marginTop: RFPercentage(2) }}
+        style={{ marginTop: RFPercentage(2), marginBottom: RFPercentage(8) }}
         data={categories}
-        renderItem={(item) => categoryComp(item)}
+        renderItem={({ item, index }) => categoryComp(item, index)}
       />
       <BottomTab navigation={props.navigation} />
     </View>
