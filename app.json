@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "pandawan",
-    "slug": "pandawan",
+    "name": "englishsentences",
+    "slug": "englishsentences",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,7 +25,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.franciscasao.pandawan"
+      "package": "com.franciscasao.englishsentences"
     },
     "web": {
       "favicon": "./assets/favicon.png"
