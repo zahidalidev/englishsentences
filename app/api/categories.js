@@ -1,4 +1,5 @@
-import axios from 'axios'
+import instance from '.'
 
-export const fetchAllCategories = async () =>
-  await axios.get('https://api.englishsentences.in/api/category')
+export const fetchAllCategories = () => instance.get('/quiz')
+
+export const fetchSubCategories = (page, id) => instance.get(`/sub/quiz/5?page=1`)
