@@ -10,9 +10,11 @@ const Button = ({
   backgroundColor = Colors.primary,
   fontSize = RFPercentage(2.3),
   ButtonStyle,
-  color = Colors.white
+  color = Colors.white,
+  disable = false
 }) => (
   <TouchableOpacity
+    disabled={disable}
     activeOpacity={0.5}
     onPress={handleSubmit}
     style={[

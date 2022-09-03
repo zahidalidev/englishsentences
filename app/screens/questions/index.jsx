@@ -16,19 +16,20 @@ const Questions = (props) => {
   const [loading, showLoading] = useState(false)
   const [currentSubCategory, setSubCurrentCategory] = useState({})
   const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [currentAnswer, setCurrentAnswer] = useState(null)
 
   useEffect(() => {
     handleGetQuestions()
     if (props.route.params?.subCategory) {
       setSubCurrentCategory(props.route.params.subCategory)
-      handleGetQuestions(props.route.params?.subCategory.quiz_id)
+      handleGetQuestions(props.route.params?.subCategory.id)
     }
   }, [props.route.params])
 
   const handleGetQuestions = async (id) => {
     try {
       showLoading(true)
-      const { data } = await fetchQuestions(id || currentSubCategory.quiz_id)
+      const { data } = await fetchQuestions(id || currentSubCategory.id)
       setQuestions(data)
     } catch (error) {
       console.log({ message: 'Sub categories not found' }, error)
@@ -36,10 +37,12 @@ const Questions = (props) => {
     showLoading(false)
   }
 
-  const handleCategory = (item) => {
-    // props.navigation.navigate('ProductList', {
-    //   category: item,
-    // })
+  const handleCheckAnser = (answerIndex) => {
+    const tempQuestion = [...questions]
+    tempQuestion[currentQuestion].sub_quiz_options[answerIndex].currentAnswer =
+      tempQuestion[currentQuestion].sub_quiz_options[answerIndex].is_correct === 1 ? 'yes' : 'no'
+      tempQuestion[currentQuestion].optionDisable = true
+    setQuestions(tempQuestion)
   }
 
   return (
@@ -70,15 +73,17 @@ const Questions = (props) => {
           <Text style={styles.questionHeading}>Choose the correct answer</Text>
           <Text style={styles.questionDescription}>{questions[currentQuestion]?.question}</Text>
           <View style={styles.questionOption}>
-            {questions[currentQuestion]?.sub_quiz_options.map((option) => (
+            {questions[currentQuestion]?.sub_quiz_options.map((option, index) => (
               <Button
+                handleSubmit={() => handleCheckAnser(index)}
                 name={option.option_value}
                 color={Colors.primary}
                 height={RFPercentage(6)}
                 ButtonStyle={{ marginBottom: RFPercentage(2) }}
                 fontSize={RFPercentage(2.7)}
                 width='90%'
-                backgroundColor={Colors.lightGrey}
+                disable={questions[currentQuestion]?.optionDisable}
+                backgroundColor={option.currentAnswer === 'yes' ? Colors.green : (option.currentAnswer === 'no' ? Colors.danger : Colors.lightGrey)}
               />
             ))}
           </View>

@@ -34,7 +34,6 @@ const SubCategories = (props) => {
     showLoading(true)
     try {
       const { data } = await fetchSubCategories(page, id || currentCategory.id)
-      console.log('asfsdas data: ', data.data)
       setSubCategories(data.data)
     } catch (error) {
       console.log({ message: 'Sub categories not found' }, error)
