@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import Home from './app/screens/homeScreen'
 import SubCategories from './app/screens/subCategories'
+import Questions from './app/screens/questions'
 
 // LogBox.ignoreAllLogs();
 
@@ -16,6 +17,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Home'>
         <Stack.Screen name='Home' component={Home} />
         <Stack.Screen name='SubCategories' component={SubCategories} />
+        <Stack.Screen name='Questions' component={Questions} />
       </Stack.Navigator>
     </NavigationContainer>
   )

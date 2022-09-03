@@ -24,7 +24,6 @@ const SubCategories = (props) => {
   }, [])
 
   useEffect(() => {
-    handleGetSubCategories()
     if (props.route.params?.category) {
       setCurrentCategory(props.route.params.category)
       handleGetSubCategories(props.route.params?.category.id)
@@ -32,10 +31,10 @@ const SubCategories = (props) => {
   }, [props.route.params])
 
   const handleGetSubCategories = async (id) => {
+    showLoading(true)
     try {
-      showLoading(true)
-      const { data } = await fetchSubCategories(page, id || currentCategory.id || 5)
-      console.log(data)
+      const { data } = await fetchSubCategories(page, id || currentCategory.id)
+      console.log('asfsdas data: ', data.data)
       setSubCategories(data.data)
     } catch (error) {
       console.log({ message: 'Sub categories not found' }, error)
@@ -43,10 +42,10 @@ const SubCategories = (props) => {
     showLoading(false)
   }
 
-  const handleCategory = (item) => {
-    // props.navigation.navigate('ProductList', {
-    //   category: item,
-    // })
+  const handleCategory = (subCategory) => {
+    props.navigation.navigate('Questions', {
+      subCategory,
+    })
   }
 
   return (
@@ -56,8 +55,7 @@ const SubCategories = (props) => {
       <View style={styles.header}></View>
       <View style={styles.bodyContainer}>
         <View style={styles.pageNavigation} >
-          <Text style={styles.heading}>Categories</Text>
-
+          <Text style={styles.heading}>{currentCategory.title}</Text>
           <View style={styles.navigation} >
             <FontAwesome name='chevron-left' color={Colors.secondary} size={RFPercentage(2)} />
             <Text style={styles.pageNumber} >{page}</Text>

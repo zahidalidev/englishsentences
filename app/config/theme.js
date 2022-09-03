@@ -7,6 +7,7 @@ export const Colors = {
   darkgrey: "#606060",
   danger: "#c62727",
   green: "#349b7c",
+  green2: "#7DBE31",
 };
 
 export const toastTheme = {
