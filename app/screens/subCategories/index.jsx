@@ -42,6 +42,7 @@ const SubCategories = (props) => {
   }
 
   const handleCategory = (subCategory) => {
+    console.log('subCategory: ', subCategory.id)
     props.navigation.navigate('Questions', {
       subCategory,
     })

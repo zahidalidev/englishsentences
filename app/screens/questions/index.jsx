@@ -16,20 +16,19 @@ const Questions = (props) => {
   const [loading, showLoading] = useState(false)
   const [currentSubCategory, setSubCurrentCategory] = useState({})
   const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [currentAnswer, setCurrentAnswer] = useState(null)
+  const [showNextButton, setShowNextButton] = useState(false)
 
   useEffect(() => {
-    handleGetQuestions()
     if (props.route.params?.subCategory) {
       setSubCurrentCategory(props.route.params.subCategory)
-      handleGetQuestions(props.route.params?.subCategory.id)
+      handleGetQuestions(props.route.params.subCategory.id)
     }
   }, [props.route.params])
 
   const handleGetQuestions = async (id) => {
     try {
       showLoading(true)
-      const { data } = await fetchQuestions(id || currentSubCategory.id)
+      const { data } = await fetchQuestions(id)
       setQuestions(data)
     } catch (error) {
       console.log({ message: 'Sub categories not found' }, error)
@@ -41,8 +40,17 @@ const Questions = (props) => {
     const tempQuestion = [...questions]
     tempQuestion[currentQuestion].sub_quiz_options[answerIndex].currentAnswer =
       tempQuestion[currentQuestion].sub_quiz_options[answerIndex].is_correct === 1 ? 'yes' : 'no'
-      tempQuestion[currentQuestion].optionDisable = true
+    tempQuestion[currentQuestion].optionDisable = true
+    tempQuestion[currentQuestion].guess = tempQuestion[currentQuestion].sub_quiz_options[answerIndex].currentAnswer
     setQuestions(tempQuestion)
+    setShowNextButton(true)
+  }
+
+  const handleNext = () =>  {
+    if(currentQuestion < 9) {
+      setCurrentQuestion(currentQuestion + 1)
+      setShowNextButton(false)
+    }
   }
 
   return (
@@ -61,13 +69,13 @@ const Questions = (props) => {
             {[...Array(10).keys()].map((num) => (
               <View
                 key={num.toString()}
-                style={[styles.numContainer, { backgroundColor: Colors.green }]}
+                style={[styles.numContainer, { backgroundColor: questions[num]?.guess === 'yes' ? Colors.green : (questions[num]?.guess === 'no' ? Colors.danger : Colors.lightGrey) }]}
               >
-                <Text>{num}</Text>
+                <Text>{num + 1}</Text>
               </View>
             ))}
           </View>
-          <ProgressBar progress={0.04} style={styles.progressBar} color={Colors.green} />
+          <ProgressBar progress={(currentQuestion * 0.10) + 0.04} style={styles.progressBar} color={Colors.green} />
         </View>
         <View style={styles.questionContainer}>
           <Text style={styles.questionHeading}>Choose the correct answer</Text>
@@ -75,6 +83,7 @@ const Questions = (props) => {
           <View style={styles.questionOption}>
             {questions[currentQuestion]?.sub_quiz_options.map((option, index) => (
               <Button
+                key={option.option_value}
                 handleSubmit={() => handleCheckAnser(index)}
                 name={option.option_value}
                 color={Colors.primary}
@@ -90,7 +99,7 @@ const Questions = (props) => {
         </View>
       </View>
       <View style={styles.nextButton}>
-        <Button name='NEXT' height={RFPercentage(6)} fontSize={RFPercentage(2.7)} />
+        {showNextButton && <Button name='NEXT' handleSubmit={handleNext} height={RFPercentage(6)} fontSize={RFPercentage(2.7)} />}
       </View>
     </View>
   )
