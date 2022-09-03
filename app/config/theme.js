@@ -2,12 +2,11 @@ export const Colors = {
   primary: "#011c47",
   secondary: "#4AAADF",
   white: "#ffffff",
-  lightGrey: "#eaeaea",
+  lightGrey: "#dddbdb",
   grey: "#969494",
   darkgrey: "#606060",
   danger: "#c62727",
-  green: "#349b7c",
-  green2: "#7DBE31",
+  green: "#7ed6b0",
 };
 
 export const toastTheme = {

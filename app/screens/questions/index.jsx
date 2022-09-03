@@ -1,27 +1,21 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Text, View, StatusBar, FlatList, RefreshControl } from 'react-native'
+import { Text, View, StatusBar } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 import { ProgressBar } from 'react-native-paper'
 
+import Button from '../../components/common/Button'
 import LoadingModal from '../../components/common/LoadingModal'
 import { Colors } from '../../config/theme'
 import { fetchQuestions } from '../../api/categories'
-import SubCategoryCard from '../../components/SubCategoryCard'
 
 import styles from './styles'
 
 const Questions = (props) => {
   const [questions, setQuestions] = useState([])
   const [loading, showLoading] = useState(false)
-  const [refreshing, setRefreshing] = useState(false)
   const [currentSubCategory, setSubCurrentCategory] = useState({})
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    handleGetQuestions()
-    setRefreshing(false)
-  }, [])
+  const [currentQuestion, setCurrentQuestion] = useState(0)
 
   useEffect(() => {
     handleGetQuestions()
@@ -35,7 +29,7 @@ const Questions = (props) => {
     try {
       showLoading(true)
       const { data } = await fetchQuestions(id || currentSubCategory.quiz_id)
-      setQuestions(data.data)
+      setQuestions(data)
     } catch (error) {
       console.log({ message: 'Sub categories not found' }, error)
     }
@@ -60,24 +54,38 @@ const Questions = (props) => {
       </View>
       <View style={styles.bodyContainer}>
         <View style={styles.progressBarContainer}>
-          <View style={styles.progressCount} >
+          <View style={styles.progressCount}>
             {[...Array(10).keys()].map((num) => (
-              <View style={[styles.numContainer, { backgroundColor: Colors.green }]} >
+              <View
+                key={num.toString()}
+                style={[styles.numContainer, { backgroundColor: Colors.green }]}
+              >
                 <Text>{num}</Text>
               </View>
             ))}
           </View>
           <ProgressBar progress={0.04} style={styles.progressBar} color={Colors.green} />
         </View>
-        {/* <FlatList
-          showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          style={{ marginTop: RFPercentage(2), marginBottom: RFPercentage(8) }}
-          data={questions}
-          renderItem={({ item, index }) => (
-            <SubCategoryCard item={item} handleCategory={handleCategory} index={index} />
-          )}
-        /> */}
+        <View style={styles.questionContainer}>
+          <Text style={styles.questionHeading}>Choose the correct answer</Text>
+          <Text style={styles.questionDescription}>{questions[currentQuestion]?.question}</Text>
+          <View style={styles.questionOption}>
+            {questions[currentQuestion]?.sub_quiz_options.map((option) => (
+              <Button
+                name={option.option_value}
+                color={Colors.primary}
+                height={RFPercentage(6)}
+                ButtonStyle={{ marginBottom: RFPercentage(2) }}
+                fontSize={RFPercentage(2.7)}
+                width='90%'
+                backgroundColor={Colors.lightGrey}
+              />
+            ))}
+          </View>
+        </View>
+      </View>
+      <View style={styles.nextButton}>
+        <Button name='NEXT' height={RFPercentage(6)} fontSize={RFPercentage(2.7)} />
       </View>
     </View>
   )

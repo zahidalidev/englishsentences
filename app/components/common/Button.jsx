@@ -10,9 +10,10 @@ const Button = ({
   backgroundColor = Colors.primary,
   fontSize = RFPercentage(2.3),
   ButtonStyle,
+  color = Colors.white
 }) => (
   <TouchableOpacity
-    activeOpacity={0.7}
+    activeOpacity={0.5}
     onPress={handleSubmit}
     style={[
       styles.buttonContainer,
@@ -20,7 +21,7 @@ const Button = ({
       ButtonStyle,
     ]}
   >
-    <Text style={[styles.buttonName, { fontSize }]}>{name}</Text>
+    <Text style={{ fontSize, color, }}>{name}</Text>
   </TouchableOpacity>
 );
 
@@ -28,12 +29,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 20,
+    borderRadius: 50,
     elevation: 2,
-  },
-
-  buttonName: {
-    color: Colors.white,
   },
 });
 
