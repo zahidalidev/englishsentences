@@ -83,8 +83,8 @@ const SubCategories = (props) => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         style={{ marginTop: RFPercentage(2) }}
         data={subCategories}
-        renderItem={({ item, index }) => (
-          <SubCategoryCard item={item} handleCategory={handleCategory} index={index} />
+        renderItem={({ item }) => (
+          <SubCategoryCard item={item} handleCategory={handleCategory} />
         )}
         onEndReached={getMoreSubCategories}
       />

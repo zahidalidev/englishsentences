@@ -10,6 +10,7 @@ import { Colors } from '../../config/theme'
 import { fetchQuestions } from '../../api/categories'
 
 import styles from './styles'
+import Result from '../result'
 
 const Questions = (props) => {
   const [questions, setQuestions] = useState([])
@@ -17,12 +18,22 @@ const Questions = (props) => {
   const [currentSubCategory, setSubCurrentCategory] = useState({})
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [showNextButton, setShowNextButton] = useState(false)
+  const [showResult, setShowResult] = useState(false)
+  const [result, setResult] = useState({
+    correct: 0,
+    inCorrect: 0,
+  })
 
   useEffect(() => {
     if (props.route.params?.subCategory) {
       setSubCurrentCategory(props.route.params.subCategory)
       handleGetQuestions(props.route.params.subCategory.id)
     }
+
+    return(() => {
+      setCurrentQuestion(0)
+      setShowResult(false)
+    })
   }, [props.route.params])
 
   const handleGetQuestions = async (id) => {
@@ -50,22 +61,38 @@ const Questions = (props) => {
     if(currentQuestion < 9) {
       setCurrentQuestion(currentQuestion + 1)
       setShowNextButton(false)
+    } else {
+      makeResult()
     }
   }
 
-  return (
-    <View style={styles.container}>
-      <LoadingModal show={loading} />
-      <StatusBar backgroundColor={Colors.primary} style='light' />
-      <View style={styles.header}>
-        <View style={styles.pageNavigation}>
-          <TouchableOpacity onPress={() => props.navigation.navigate('SubCategories')} >
-            <FontAwesome name='chevron-left' size={RFPercentage(2)} color={Colors.primary} />
-          </TouchableOpacity>
-          <Text style={styles.heading}>{currentSubCategory.title}</Text>
-        </View>
-      </View>
-      <View style={styles.bodyContainer}>
+  const makeResult = () => {
+    setShowResult(true)
+
+    const resultCounts = {
+      correct: 0,
+      inCorrect: 0,
+    }
+
+    questions.forEach(item => {
+      if(item.guess === 'yes') {
+        resultCounts.correct += 1
+      }else if (item.guess === 'no') {
+        resultCounts.inCorrect += 1
+      }
+    })
+
+    setResult(resultCounts)
+  }
+
+  const handleAgainTest = () => {
+    setCurrentQuestion(0)
+    setShowResult(false)
+    handleGetQuestions(props.route.params?.subCategory.id)
+  }
+
+  const QuestionComponent = () => <>
+     <View style={styles.bodyContainer}>
         <View style={styles.progressBarContainer}>
           <View style={styles.progressCount}>
             {[...Array(10).keys()].map((num) => (
@@ -103,6 +130,21 @@ const Questions = (props) => {
       <View style={styles.nextButton}>
         {showNextButton && <Button name='NEXT' handleSubmit={handleNext} height={RFPercentage(6)} fontSize={RFPercentage(2.7)} />}
       </View>
+  </>
+
+  return (
+    <View style={styles.container}>
+      <LoadingModal show={loading} />
+      <StatusBar backgroundColor={Colors.primary} style='light' />
+      <View style={styles.header}>
+        <View style={styles.pageNavigation}>
+          <TouchableOpacity onPress={() => props.navigation.navigate('SubCategories')}>
+            <FontAwesome name='chevron-left' size={RFPercentage(2)} color={Colors.white} />
+          </TouchableOpacity>
+          <Text style={styles.heading}>{currentSubCategory.title}</Text>
+        </View>
+      </View>
+      {!showResult ? <QuestionComponent /> : <Result result={result} handleAgainTest={handleAgainTest} handleMoreExercises={() => props.navigation.navigate('SubCategories')} />}
     </View>
   )
 }

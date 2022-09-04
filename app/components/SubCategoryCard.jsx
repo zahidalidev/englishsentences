@@ -7,7 +7,7 @@ import { Colors } from '../config/theme'
 
 const windowWidth = Dimensions.get('window').width
 
-const SubCategoryCard = ({ item, handleCategory, index }) => (
+const SubCategoryCard = ({ item, handleCategory }) => (
   <TouchableOpacity
     key={item.name}
     activeOpacity={0.6}
