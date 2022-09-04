@@ -24,9 +24,17 @@ const styles = StyleSheet.create({
     borderTopStartRadius: RFPercentage(3.7),
     marginTop: RFPercentage(-4),
     alignItems: 'flex-start',
+
+  },
+
+  paginationHeading: {
     paddingLeft: RFPercentage(3.2),
-    paddingTop: RFPercentage(4),
+    paddingTop: RFPercentage(3),
     paddingBottom: RFPercentage(1),
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '57%',
+    justifyContent: 'space-between'
   },
 
   heading: {

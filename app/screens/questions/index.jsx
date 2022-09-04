@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react'
-import { Text, View, StatusBar } from 'react-native'
+import { useEffect, useState} from 'react'
+import { Text, View, StatusBar, TouchableOpacity } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 import { ProgressBar } from 'react-native-paper'
@@ -59,7 +59,9 @@ const Questions = (props) => {
       <StatusBar backgroundColor={Colors.primary} style='light' />
       <View style={styles.header}>
         <View style={styles.pageNavigation}>
-          <FontAwesome name='chevron-left' size={RFPercentage(2)} color={Colors.white} />
+          <TouchableOpacity onPress={() => props.navigation.navigate('SubCategories')} >
+            <FontAwesome name='chevron-left' size={RFPercentage(2)} color={Colors.primary} />
+          </TouchableOpacity>
           <Text style={styles.heading}>{currentSubCategory.title}</Text>
         </View>
       </View>

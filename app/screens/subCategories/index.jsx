@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Text, View, StatusBar, FlatList, RefreshControl, ActivityIndicator } from 'react-native'
+import { Text, View, StatusBar, FlatList, RefreshControl, TouchableOpacity } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -26,7 +26,7 @@ const SubCategories = (props) => {
   useEffect(() => {
     if (props.route.params?.category) {
       setCurrentCategory(props.route.params.category)
-      handleGetSubCategories(props.route.params?.category.id)
+      handleGetSubCategories()
     }
 
     return(() => {
@@ -34,10 +34,10 @@ const SubCategories = (props) => {
     })
   }, [props.route.params])
 
-  const handleGetSubCategories = async (id) => {
+  const handleGetSubCategories = async () => {
     showLoading(true)
     try {
-      const { data } = await fetchSubCategories(page, id || currentCategory.id)
+      const { data } = await fetchSubCategories(page, props.route.params?.category.id)
       setSubCategories(data.data)
     } catch (error) {
       console.log({ message: 'Sub categories not found' }, error)
@@ -68,9 +68,15 @@ const SubCategories = (props) => {
     <View style={styles.container}>
       <LoadingModal show={loading} />
       <StatusBar backgroundColor={Colors.primary} style='light' />
-      <View style={styles.header}></View>
+      <View style={styles.header}>
+      </View>
       <View style={styles.pageNavigation}>
-        <Text style={styles.heading}>{currentCategory.title}</Text>
+        <View style={styles.paginationHeading} >
+          <TouchableOpacity onPress={() => props.navigation.navigate('Home')} >
+            <FontAwesome name='chevron-left' size={RFPercentage(2)} color={Colors.primary} />
+          </TouchableOpacity>
+          <Text style={styles.heading}>{currentCategory.title}</Text>
+        </View>
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
