@@ -17,21 +17,16 @@ const styles = StyleSheet.create({
     height: RFPercentage(11),
   },
 
-  bodyContainer: {
+  pageNavigation: {
     width: '100%',
     backgroundColor: Colors.white,
     borderTopEndRadius: RFPercentage(3.7),
     borderTopStartRadius: RFPercentage(3.7),
     marginTop: RFPercentage(-4),
-    alignItems: 'center',
-  },
-
-  pageNavigation: {
-    width: "88%",
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: RFPercentage(5),
+    alignItems: 'flex-start',
+    paddingLeft: RFPercentage(3.2),
+    paddingTop: RFPercentage(4),
+    paddingBottom: RFPercentage(1),
   },
 
   heading: {

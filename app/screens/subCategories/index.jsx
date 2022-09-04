@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Text, View, StatusBar, FlatList, RefreshControl } from 'react-native'
+import { Text, View, StatusBar, FlatList, RefreshControl, ActivityIndicator } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -28,6 +28,10 @@ const SubCategories = (props) => {
       setCurrentCategory(props.route.params.category)
       handleGetSubCategories(props.route.params?.category.id)
     }
+
+    return(() => {
+      setPage(1)
+    })
   }, [props.route.params])
 
   const handleGetSubCategories = async (id) => {
@@ -42,10 +46,22 @@ const SubCategories = (props) => {
   }
 
   const handleCategory = (subCategory) => {
-    console.log('subCategory: ', subCategory.id)
     props.navigation.navigate('Questions', {
       subCategory,
     })
+  }
+
+  const getMoreSubCategories = async () => {
+    showLoading(true)
+    const newPage = page + 1
+    setPage(newPage)
+    try {
+      const { data } = await fetchSubCategories(newPage, currentCategory.id)
+      setSubCategories([...subCategories, ...data.data])
+    } catch (error) {
+      console.log({ message: 'Sub categories not found' }, error)
+    }
+    showLoading(false)
   }
 
   return (
@@ -53,25 +69,19 @@ const SubCategories = (props) => {
       <LoadingModal show={loading} />
       <StatusBar backgroundColor={Colors.primary} style='light' />
       <View style={styles.header}></View>
-      <View style={styles.bodyContainer}>
-        <View style={styles.pageNavigation} >
-          <Text style={styles.heading}>{currentCategory.title}</Text>
-          <View style={styles.navigation} >
-            <FontAwesome name='chevron-left' color={Colors.secondary} size={RFPercentage(2)} />
-            <Text style={styles.pageNumber} >{page}</Text>
-            <FontAwesome name='chevron-right' color={Colors.secondary} size={RFPercentage(2)} />
-          </View>
-        </View>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          style={{ marginTop: RFPercentage(2), marginBottom: RFPercentage(8) }}
-          data={subCategories}
-          renderItem={({ item, index }) => (
-            <SubCategoryCard item={item} handleCategory={handleCategory} index={index} />
-          )}
-        />
+      <View style={styles.pageNavigation}>
+        <Text style={styles.heading}>{currentCategory.title}</Text>
       </View>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        style={{ marginTop: RFPercentage(2) }}
+        data={subCategories}
+        renderItem={({ item, index }) => (
+          <SubCategoryCard item={item} handleCategory={handleCategory} index={index} />
+        )}
+        onEndReached={getMoreSubCategories}
+      />
     </View>
   )
 }
