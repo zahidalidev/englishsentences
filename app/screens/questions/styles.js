@@ -97,6 +97,13 @@ const styles = StyleSheet.create({
     bottom: RFPercentage(6),
     left: '6%',
     right: '6%'
+  },
+
+  backIcon: {
+    width: RFPercentage(3),
+    height: RFPercentage(3),
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
 

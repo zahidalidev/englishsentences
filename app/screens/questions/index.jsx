@@ -138,7 +138,7 @@ const Questions = (props) => {
       <StatusBar backgroundColor={Colors.primary} style='light' />
       <View style={styles.header}>
         <View style={styles.pageNavigation}>
-          <TouchableOpacity onPress={() => props.navigation.navigate('SubCategories')}>
+          <TouchableOpacity style={styles.backIcon} onPress={() => props.navigation.navigate('SubCategories')}>
             <FontAwesome name='chevron-left' size={RFPercentage(2)} color={Colors.white} />
           </TouchableOpacity>
           <Text style={styles.heading}>{currentSubCategory.title}</Text>

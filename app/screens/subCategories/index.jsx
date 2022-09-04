@@ -73,7 +73,7 @@ const SubCategories = (props) => {
       <View style={styles.pageNavigation}>
         <View style={styles.paginationHeading} >
           <TouchableOpacity onPress={() => props.navigation.navigate('Home')} >
-            <FontAwesome name='chevron-left' size={RFPercentage(2)} color={Colors.primary} />
+            <FontAwesome style={styles.backIcon} name='chevron-left' size={RFPercentage(2)} color={Colors.primary} />
           </TouchableOpacity>
           <Text style={styles.heading}>{currentCategory.title}</Text>
         </View>
