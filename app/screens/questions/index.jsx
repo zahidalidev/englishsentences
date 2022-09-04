@@ -114,14 +114,14 @@ const Questions = (props) => {
               <Button
                 key={option.option_value}
                 handleSubmit={() => handleCheckAnser(index)}
-                name={option.option_value}
+                name={`${option.option_value}${(option.is_correct === 1 && questions[currentQuestion]?.optionDisable) ? ' (correct)' : ''}`}
                 color={Colors.primary}
                 height={RFPercentage(6)}
                 ButtonStyle={{ marginBottom: RFPercentage(2) }}
                 fontSize={RFPercentage(2.7)}
                 width='90%'
                 disable={questions[currentQuestion]?.optionDisable}
-                backgroundColor={option.currentAnswer === 'yes' ? Colors.green : (option.currentAnswer === 'no' ? Colors.danger : Colors.lightGrey)}
+                backgroundColor={(option.currentAnswer === 'yes' || (option.is_correct === 1 && questions[currentQuestion]?.optionDisable)) ? Colors.green : (option.currentAnswer === 'no' ? Colors.danger : Colors.lightGrey)}
               />
             ))}
           </View>
