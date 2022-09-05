@@ -1,11 +1,15 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { Text, View, StatusBar, FlatList, RefreshControl } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
+import * as Notifications from 'expo-notifications'
+import Constants from 'expo-constants'
 
 import LoadingModal from '../../components/common/LoadingModal'
 import { Colors } from '../../config/theme'
-import { fetchAllCategories } from '../../api/categories'
 import CategoryCard from '../../components/CategoryCard'
+import getPushNotificationsToken from '../../utils/getNotificationToken'
+import { fetchAllCategories } from '../../api/categories'
+import { saveNotificationToken } from '../../api/token'
 
 import styles from './styles'
 
@@ -13,6 +17,9 @@ const HomeScreen = (props) => {
   const [categories, setCategories] = useState([])
   const [loading, showLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+  const [notification, setNotification] = useState()
+  const notificationListener = useRef({})
+  const responseListener = useRef({})
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
@@ -20,9 +27,40 @@ const HomeScreen = (props) => {
     setRefreshing(false)
   }, [])
 
+
+  const getNotificationToken = async() => {
+    try {
+      const token = await getPushNotificationsToken()
+      const body = {
+        firebase_token: token,
+        device_id: Constants.installationId
+      }
+      const { data } = await saveNotificationToken(body)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
+    getNotificationToken()
     handleGetAllCategories()
+    listenPushNotification()
   }, [])
+
+  const listenPushNotification = () => {
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+      setNotification(notification)
+    })
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      props.navigation.navigate('Home')
+    })
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current)
+      Notifications.removeNotificationSubscription(responseListener.current)
+    }
+  }
 
   const handleGetAllCategories = async () => {
     try {
