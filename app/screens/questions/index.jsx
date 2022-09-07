@@ -4,7 +4,6 @@ import { Text, View, StatusBar, TouchableOpacity } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 import { ProgressBar } from 'react-native-paper'
-// import { AdMobBanner } from "expo-ads-admob";
 
 import Button from '../../components/common/Button'
 import LoadingModal from '../../components/common/LoadingModal'
