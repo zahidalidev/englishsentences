@@ -1,4 +1,4 @@
-import { BannerAd } from 'react-native-google-mobile-ads';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import { useEffect, useState} from 'react'
 import { Text, View, StatusBar, TouchableOpacity } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
@@ -141,6 +141,7 @@ const Questions = (props) => {
       </View>
         <BannerAd
           unitId={'ca-app-pub-3940256099942544/6300978111'}
+          size={BannerAdSize.LARGE_BANNER}
           // requestOptions={{
           //   requestNonPersonalizedAdsOnly: true,
           // }}
