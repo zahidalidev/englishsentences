@@ -1,13 +1,16 @@
+import { BannerAd } from 'react-native-google-mobile-ads';
 import { useEffect, useState} from 'react'
 import { Text, View, StatusBar, TouchableOpacity } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 import { ProgressBar } from 'react-native-paper'
+// import { AdMobBanner } from "expo-ads-admob";
 
 import Button from '../../components/common/Button'
 import LoadingModal from '../../components/common/LoadingModal'
 import { Colors } from '../../config/theme'
 import { fetchQuestions } from '../../api/categories'
+import { questionBannerId } from "../../config/adIds";
 
 import styles from './styles'
 import Result from '../result'
@@ -91,6 +94,11 @@ const Questions = (props) => {
     handleGetQuestions(props.route.params?.subCategory.id)
   }
 
+  const bannerError = (error) => {
+    console.log("Banner ad error: ", error);
+    return;
+}
+
   const QuestionComponent = () => <>
      <View style={styles.bodyContainer}>
         <View style={styles.progressBarContainer}>
@@ -129,7 +137,20 @@ const Questions = (props) => {
       </View>
       <View style={styles.nextButton}>
         {showNextButton && <Button name='NEXT' handleSubmit={handleNext} height={RFPercentage(6)} fontSize={RFPercentage(2.7)} />}
+        <View style={{ marginTop: RFPercentage(1), width: "100%", justifyContent: "center", alignItems: "center" }} >
+        </View>
       </View>
+        <BannerAd
+          unitId={'ca-app-pub-3940256099942544/6300978111'}
+          // requestOptions={{
+          //   requestNonPersonalizedAdsOnly: true,
+          // }}
+        />
+        {/* <AdMobBanner
+          adSize="fullBanner"
+          adUnitID="ca-app-pub-3940256099942544/6300978111"
+          onAdFailedToLoad={error => console.error(error)}
+        /> */}
   </>
 
   return (
