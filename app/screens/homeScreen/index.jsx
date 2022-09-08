@@ -31,6 +31,7 @@ const HomeScreen = (props) => {
   const getNotificationToken = async() => {
     try {
       const token = await getPushNotificationsToken()
+      console.log('token: ', token)
       const body = {
         firebase_token: token,
         device_id: Constants.installationId

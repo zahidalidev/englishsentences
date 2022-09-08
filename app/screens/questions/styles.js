@@ -99,6 +99,13 @@ const styles = StyleSheet.create({
     right: '6%'
   },
 
+  bannerAdBottom: {
+    width: '90%',
+    justifyContent: 'center',
+    alignItems:'center',
+    margin: RFPercentage(2)
+  },
+
   backIcon: {
     width: RFPercentage(3),
     height: RFPercentage(3),
