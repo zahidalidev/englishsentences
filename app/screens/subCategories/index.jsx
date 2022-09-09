@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Text, View, StatusBar, FlatList, RefreshControl, TouchableOpacity } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
-import { FontAwesome } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import LoadingModal from '../../components/common/LoadingModal'
 import { Colors } from '../../config/theme'
@@ -72,8 +72,8 @@ const SubCategories = (props) => {
       </View>
       <View style={styles.pageNavigation}>
         <View style={styles.paginationHeading} >
-          <TouchableOpacity onPress={() => props.navigation.navigate('Home')} >
-            <FontAwesome style={styles.backIcon} name='chevron-left' size={RFPercentage(2)} color={Colors.primary} />
+          <TouchableOpacity onPress={() => props.navigation.openDrawer()} >
+            <MaterialIcons style={styles.backIcon} name='menu-open' size={RFPercentage(4)} color={Colors.primary} />
           </TouchableOpacity>
           <Text style={styles.heading}>{currentCategory.title}</Text>
         </View>

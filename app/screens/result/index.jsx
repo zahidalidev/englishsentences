@@ -1,9 +1,11 @@
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import { Text, View } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 
 import Button from '../../components/common/Button'
 import { Colors } from '../../config/theme'
+import { questionBannerId } from "../../config/adIds";
 import styles from './styles'
 
 const Result = ({ result, handleAgainTest, handleMoreExercises }) => {
@@ -45,6 +47,13 @@ const Result = ({ result, handleAgainTest, handleMoreExercises }) => {
          width='90%'
          backgroundColor={Colors.green}
       />
+      <BannerAd
+        unitId={questionBannerId}
+        size={BannerAdSize.MEDIUM_RECTANGLE}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+        />
     </View>
   )
 }

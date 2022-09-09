@@ -164,7 +164,7 @@ const Questions = (props) => {
 
   return (
     <View style={styles.container}>
-      {currentQuestion === 4 && loaded ? interstitial.show() : console.log(currentQuestion)}
+      {(currentQuestion === 4 || currentQuestion === 9) && loaded ? interstitial.show() : console.log(currentQuestion)}
       <LoadingModal show={loading} />
       <StatusBar backgroundColor={Colors.primary} style='light' />
       <View style={styles.header}>
@@ -181,3 +181,4 @@ const Questions = (props) => {
 }
 
 export default Questions
+

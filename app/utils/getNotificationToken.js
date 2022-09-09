@@ -23,7 +23,7 @@ const getPushNotificationsToken = async () => {
       alert('Failed to get push token for push notification!')
       return
     }
-    token = (await Notifications.getExpoPushTokenAsync({experienceId:'@zahidalidev/englishsentences'})).data
+    token = (await Notifications.getExpoPushTokenAsync({experienceId:'@farhanhyperzod/englishsentences'})).data
   } else {
     alert('Must use physical device for Push Notifications')
   }
