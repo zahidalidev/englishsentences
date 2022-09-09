@@ -1,6 +1,7 @@
+import { Audio } from 'expo-av';
 import { BannerAd, BannerAdSize, InterstitialAd, AdEventType } from 'react-native-google-mobile-ads';
 import { useEffect, useState} from 'react'
-import { Text, View, StatusBar, TouchableOpacity } from 'react-native'
+import { Text, View, StatusBar, TouchableOpacity, Vibration } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 import { ProgressBar } from 'react-native-paper'
@@ -13,6 +14,7 @@ import { questionBannerId, duringQuizinterstitialId } from "../../config/adIds";
 
 import styles from './styles'
 import Result from '../result'
+import successBell from '../../../assets/sounds/success_bell-6776.mp3'
 
 const interstitial = InterstitialAd.createForAdRequest(duringQuizinterstitialId, { requestNonPersonalizedAdsOnly: true })
 
@@ -24,11 +26,25 @@ const Questions = (props) => {
   const [showNextButton, setShowNextButton] = useState(false)
   const [showResult, setShowResult] = useState(false)
   const [loaded, setLoaded] = useState(false);
+  const [sound, setSound] = useState();
 
   const [result, setResult] = useState({
     correct: 0,
     inCorrect: 0,
   })
+
+  const playSound = async() => {
+    const { sound } = await Audio.Sound.createAsync(successBell);
+    setSound(sound);
+    await sound.playAsync()
+  }
+
+  useEffect(() => {
+    return sound
+      ? () => {
+          sound.unloadAsync(); }
+      : undefined;
+  }, [sound]);
 
   useEffect(() => {
     const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
@@ -71,6 +87,7 @@ const Questions = (props) => {
     tempQuestion[currentQuestion].guess = tempQuestion[currentQuestion].sub_quiz_options[answerIndex].currentAnswer
     setQuestions(tempQuestion)
     setShowNextButton(true)
+    tempQuestion[currentQuestion].guess === 'no' ? Vibration.vibrate(1000) : playSound()
   }
 
   const handleNext = () =>  {
@@ -164,7 +181,7 @@ const Questions = (props) => {
 
   return (
     <View style={styles.container}>
-      {(currentQuestion === 4 || currentQuestion === 9) && loaded ? interstitial.show() : console.log(currentQuestion)}
+      {(currentQuestion === 4 || currentQuestion === 9) && loaded ? interstitial.show() : null}
       <LoadingModal show={loading} />
       <StatusBar backgroundColor={Colors.primary} style='light' />
       <View style={styles.header}>
