@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
 
   nextButton: {
     position: 'absolute',
-    bottom: RFPercentage(0),
+    bottom: RFPercentage(13),
     left: '6%',
     right: '6%',
   },
@@ -120,6 +120,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: RFPercentage(15),
   },
+
+  homeBanner: {
+    position: 'absolute',
+    alignItems: 'center',
+    bottom: 0,
+    left: 0,
+    right: 0
+  }
 })
 
 export default styles

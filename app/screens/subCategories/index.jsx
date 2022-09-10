@@ -1,13 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import {
-  Text,
-  View,
-  StatusBar,
-  FlatList,
-  RefreshControl,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native'
+import { Text, View, StatusBar, FlatList, RefreshControl, TouchableOpacity } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -75,41 +67,43 @@ const SubCategories = (props) => {
   }
 
   return (
-    <View style={styles.container}>
-      <LoadingModal show={loading} />
-      <StatusBar backgroundColor={Colors.primary} style='light' />
-      <View style={styles.header}></View>
-      <View style={styles.pageNavigation}>
-        <View style={styles.paginationHeading}>
-          <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
-            <FontAwesome
-              name='chevron-left'
-              style={styles.backIcon}
-              size={RFPercentage(2)}
-              color={Colors.primary}
-            />
-          </TouchableOpacity>
-          <Text style={styles.heading}>{currentCategory.title}</Text>
+    <>
+      <View style={styles.container}>
+        <LoadingModal show={loading} />
+        <StatusBar backgroundColor={Colors.primary} style='light' />
+        <View style={styles.header}></View>
+        <View style={styles.pageNavigation}>
+          <View style={styles.paginationHeading}>
+            <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
+              <FontAwesome
+                name='chevron-left'
+                style={styles.backIcon}
+                size={RFPercentage(2)}
+                color={Colors.primary}
+              />
+            </TouchableOpacity>
+            <Text style={styles.heading}>{currentCategory.title}</Text>
+          </View>
         </View>
-      </View>
-      <ScrollView>
         <FlatList
           showsVerticalScrollIndicator={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          style={{ marginTop: RFPercentage(2), marginBottom: RFPercentage(2), marginLeft: '5%' }}
+          style={{ marginTop: RFPercentage(2) }}
           data={subCategories}
           renderItem={({ item }) => <SubCategoryCard item={item} handleCategory={handleCategory} />}
           onEndReached={getMoreSubCategories}
         />
+      </View>
+      <View style={styles.homeBanner}>
         <BannerAd
           unitId={questionBannerId}
-          size={BannerAdSize.FULL_BANNER}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,
           }}
         />
-      </ScrollView>
-    </View>
+      </View>
+    </>
   )
 }
 

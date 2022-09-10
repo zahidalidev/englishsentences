@@ -82,32 +82,34 @@ const HomeScreen = (props) => {
   }
 
   return (
-    <View style={styles.container}>
-      <LoadingModal show={loading} />
-      <StatusBar backgroundColor={Colors.primary} style='light' />
-      <View style={styles.header}></View>
-      <ScrollView style={styles.bodyContainer}>
-        <Text style={styles.heading}>Categories</Text>
-        <FlatList
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          style={{ marginTop: RFPercentage(2), marginBottom: RFPercentage(1), marginLeft: '5%' }}
-          data={categories}
-          numColumns={2}
-          renderItem={({ item, index }) => (
-            <CategoryCard item={item} handleCategory={handleCategory} index={index} />
-          )}
-        />
-        <View style={styles.homeBanner} >
-          <BannerAd
-            unitId={questionBannerId}
-            size={BannerAdSize.LEADERBOARD}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: true,
-            }}
+    <>
+      <View style={styles.container}>
+        <LoadingModal show={loading} />
+        <StatusBar backgroundColor={Colors.primary} style='light' />
+        <View style={styles.header}></View>
+        <View style={styles.bodyContainer}>
+          <Text style={styles.heading}>Categories</Text>
+          <FlatList
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            style={{ marginTop: RFPercentage(2), marginBottom: RFPercentage(1), marginLeft: '5%' }}
+            data={categories}
+            numColumns={2}
+            renderItem={({ item, index }) => (
+              <CategoryCard item={item} handleCategory={handleCategory} index={index} />
+            )}
           />
         </View>
-      </ScrollView>
-    </View>
+      </View>
+      <View style={styles.homeBanner}>
+        <BannerAd
+          unitId={questionBannerId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
+      </View>
+    </>
   )
 }
 

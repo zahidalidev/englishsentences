@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     alignItems: 'center',
     width: '100%',
+    marginBottom: RFPercentage(7)
   },
 
   header: {
@@ -36,10 +37,11 @@ const styles = StyleSheet.create({
   },
 
   homeBanner: {
-    width: '100%',
-    justifyContent: 'center',
+    position: 'absolute',
     alignItems: 'center',
-    marginBottom: RFPercentage(2)
+    bottom: 0,
+    left: 0,
+    right: 0
   }
 })
 

@@ -182,24 +182,30 @@ const Questions = (props) => {
       <View style={styles.nextButton}>
         {showNextButton && (
           <Button
-            name={ currentQuestion === 9 ? 'FINISH' : 'NEXT'}
+            name={currentQuestion === 9 ? 'FINISH' : 'NEXT'}
             handleSubmit={handleNext}
             height={RFPercentage(6)}
             fontSize={RFPercentage(2.7)}
           />
         )}
-        <View style={styles.bannerAdBottom}>
-          <BannerAd
-            unitId={questionBannerId}
-            size={BannerAdSize.FULL_BANNER}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly: true,
-            }}
-          />
-        </View>
+      </View>
+      <View style={styles.homeBanner}>
+        <BannerAd
+          unitId={questionBannerId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
       </View>
     </>
   )
+
+  const handleBack = () => {
+    setCurrentQuestion(0)
+    setShowResult(false)
+    props.navigation.navigate('SubCategories')
+  }
 
   return (
     <View style={styles.container}>
@@ -207,10 +213,7 @@ const Questions = (props) => {
       <StatusBar backgroundColor={Colors.primary} style='light' />
       <View style={styles.header}>
         <View style={styles.pageNavigation}>
-          <TouchableOpacity
-            style={styles.backIcon}
-            onPress={() => props.navigation.navigate('SubCategories')}
-          >
+          <TouchableOpacity style={styles.backIcon} onPress={handleBack}>
             <FontAwesome name='chevron-left' size={RFPercentage(2)} color={Colors.white} />
           </TouchableOpacity>
           <Text style={styles.heading}>{currentSubCategory.title}</Text>
@@ -221,7 +224,7 @@ const Questions = (props) => {
           <QuestionComponent />
         ) : (
           <>
-            <View style={styles.rectangleAd} >
+            <View style={styles.rectangleAd}>
               <BannerAd
                 unitId={questionBannerId}
                 size={BannerAdSize.MEDIUM_RECTANGLE}
@@ -230,9 +233,9 @@ const Questions = (props) => {
                 }}
               />
             </View>
-            <View style={[styles.nextButton, { marginBottom: RFPercentage(4) }]}>
+            <View style={styles.nextButton}>
               <Button
-                name='NEXT'
+                name={currentQuestion === 9 ? 'FINISH' : 'NEXT'}
                 handleSubmit={handleNext}
                 height={RFPercentage(6)}
                 fontSize={RFPercentage(2.7)}
