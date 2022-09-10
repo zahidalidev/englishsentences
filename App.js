@@ -6,7 +6,6 @@ import { View } from 'react-native'
 
 // import { LogBox } from "react-native";
 
-import Drawer from './app/components/Drawer'
 import Home from './app/screens/homeScreen'
 import SubCategories from './app/screens/subCategories'
 import Questions from './app/screens/questions'
@@ -36,7 +35,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Home' drawerContent={(props) => <Drawer {...props} />} >
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Home' >
         <Stack.Screen name='Home' component={Home} />
         <Stack.Screen name='SubCategories' component={SubCategories} />
         <Stack.Screen name='Questions' component={Questions} />
