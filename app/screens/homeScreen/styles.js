@@ -23,8 +23,6 @@ const styles = StyleSheet.create({
     borderTopEndRadius: RFPercentage(3.7),
     borderTopStartRadius: RFPercentage(3.7),
     marginTop: RFPercentage(-4),
-    alignItems: 'center',
-    marginBottom: RFPercentage(10),
   },
 
   heading: {
@@ -35,6 +33,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: RFPercentage(4),
     color: Colors.primary
+  },
+
+  homeBanner: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: RFPercentage(2)
   }
 })
 

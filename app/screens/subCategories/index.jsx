@@ -1,5 +1,13 @@
 import { useEffect, useState, useCallback } from 'react'
-import { Text, View, StatusBar, FlatList, RefreshControl, TouchableOpacity } from 'react-native'
+import {
+  Text,
+  View,
+  StatusBar,
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -9,6 +17,8 @@ import { fetchSubCategories } from '../../api/categories'
 import SubCategoryCard from '../../components/SubCategoryCard'
 
 import styles from './styles'
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads'
+import { questionBannerId } from '../../config/adIds'
 
 const SubCategories = (props) => {
   const [subCategories, setSubCategories] = useState([])
@@ -29,9 +39,9 @@ const SubCategories = (props) => {
       handleGetSubCategories()
     }
 
-    return(() => {
+    return () => {
       setPage(1)
-    })
+    }
   }, [props.route.params])
 
   const handleGetSubCategories = async () => {
@@ -68,26 +78,37 @@ const SubCategories = (props) => {
     <View style={styles.container}>
       <LoadingModal show={loading} />
       <StatusBar backgroundColor={Colors.primary} style='light' />
-      <View style={styles.header}>
-      </View>
+      <View style={styles.header}></View>
       <View style={styles.pageNavigation}>
-        <View style={styles.paginationHeading} >
-          <TouchableOpacity onPress={() => props.navigation.navigate('Home')} >
-            <FontAwesome name='chevron-left' style={styles.backIcon} size={RFPercentage(2)} color={Colors.primary} />
+        <View style={styles.paginationHeading}>
+          <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
+            <FontAwesome
+              name='chevron-left'
+              style={styles.backIcon}
+              size={RFPercentage(2)}
+              color={Colors.primary}
+            />
           </TouchableOpacity>
           <Text style={styles.heading}>{currentCategory.title}</Text>
         </View>
       </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        style={{ marginTop: RFPercentage(2) }}
-        data={subCategories}
-        renderItem={({ item }) => (
-          <SubCategoryCard item={item} handleCategory={handleCategory} />
-        )}
-        onEndReached={getMoreSubCategories}
-      />
+      <ScrollView>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          style={{ marginTop: RFPercentage(2), marginBottom: RFPercentage(2), marginLeft: '5%' }}
+          data={subCategories}
+          renderItem={({ item }) => <SubCategoryCard item={item} handleCategory={handleCategory} />}
+          onEndReached={getMoreSubCategories}
+        />
+        <BannerAd
+          unitId={questionBannerId}
+          size={BannerAdSize.FULL_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
+      </ScrollView>
     </View>
   )
 }

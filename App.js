@@ -4,14 +4,14 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import LottieView from 'lottie-react-native'
 import { View } from 'react-native'
 
-// import { LogBox } from "react-native";
+import { LogBox } from "react-native";
 
 import Home from './app/screens/homeScreen'
 import SubCategories from './app/screens/subCategories'
 import Questions from './app/screens/questions'
 
 import splashScreen from './assets/learnSplash.json'
-// LogBox.ignoreAllLogs();
+LogBox.ignoreAllLogs();
 
 const Stack = createDrawerNavigator()
 

@@ -1,14 +1,41 @@
-import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import { AdEventType, BannerAd, BannerAdSize, InterstitialAd } from 'react-native-google-mobile-ads';
 import { Text, View } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { RFPercentage } from 'react-native-responsive-fontsize'
+import { useEffect, useState } from 'react';
 
 import Button from '../../components/common/Button'
 import { Colors } from '../../config/theme'
-import { questionBannerId } from "../../config/adIds";
+import { duringQuizinterstitialId, questionBannerId } from "../../config/adIds";
 import styles from './styles'
 
+
+const interstitial = InterstitialAd.createForAdRequest(duringQuizinterstitialId, {
+  requestNonPersonalizedAdsOnly: true,
+})
+
+
 const Result = ({ result, handleAgainTest, handleMoreExercises }) => {
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    console.log('loading...')
+    const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+      console.log('loaded')
+      setLoaded(true)
+    })
+
+    interstitial.load()
+
+    return unsubscribe
+  }, [])
+
+  useEffect(() => {
+    if(loaded) {
+      interstitial.show()
+    }
+  }, [result, loaded])
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>RESULT</Text>

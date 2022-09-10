@@ -17,11 +17,11 @@ const styles = StyleSheet.create({
     height: RFPercentage(14),
     justifyContent: 'center',
     alignItems: 'flex-start',
-    paddingLeft: RFPercentage(3)
+    paddingLeft: RFPercentage(3),
   },
 
   pageNavigation: {
-    width: "55%",
+    width: '55%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 
   heading: {
     fontSize: RFPercentage(3.5),
-    color: Colors.white
+    color: Colors.white,
   },
 
   progressBarContainer: {
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     zIndex: 10,
-    marginBottom: -16
+    marginBottom: -16,
   },
 
   numContainer: {
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   progressBar: {
     height: 8,
     backgroundColor: Colors.lightGrey,
-    borderRadius: 10
+    borderRadius: 10,
   },
 
   bodyContainer: {
@@ -72,46 +72,54 @@ const styles = StyleSheet.create({
   questionContainer: {
     width: '90%',
     flexDirection: 'column',
-    marginTop: RFPercentage(7)
+    marginTop: RFPercentage(7),
   },
 
   questionHeading: {
     fontSize: RFPercentage(2.7),
-    fontWeight: '500'
+    fontWeight: '500',
   },
 
   questionDescription: {
     marginTop: RFPercentage(2),
-    fontSize: RFPercentage(2.5)
+    fontSize: RFPercentage(2.5),
   },
 
   questionOption: {
     marginTop: RFPercentage(5),
     width: '100%',
     justifyContent: 'center',
-    alignItems: "center"
+    alignItems: 'center',
   },
 
   nextButton: {
-    position: "absolute",
-    bottom: RFPercentage(6),
+    position: 'absolute',
+    bottom: RFPercentage(0),
     left: '6%',
-    right: '6%'
+    right: '6%',
   },
 
   bannerAdBottom: {
-    width: '90%',
+    width: '100%',
     justifyContent: 'center',
-    alignItems:'center',
-    margin: RFPercentage(2)
+    alignItems: 'center',
+    marginTop: RFPercentage(5),
   },
 
   backIcon: {
     width: RFPercentage(3),
     height: RFPercentage(3),
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
+
+  rectangleAd: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: RFPercentage(15),
+  },
 })
 
 export default styles
