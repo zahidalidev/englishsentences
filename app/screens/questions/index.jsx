@@ -1,7 +1,7 @@
 import { Audio } from 'expo-av'
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads'
 import { useEffect, useState } from 'react'
-import { Text, View, StatusBar, TouchableOpacity, Vibration } from 'react-native'
+import { Text, View, StatusBar, TouchableOpacity, Vibration, Animated } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 import { ProgressBar } from 'react-native-paper'
@@ -25,6 +25,7 @@ const Questions = (props) => {
   const [showResult, setShowResult] = useState(false)
   const [sound, setSound] = useState()
   const [showAd, setShowAd] = useState(false)
+  const [opacity, setOpacity] = useState(new Animated.Value(0))
 
   const [result, setResult] = useState({
     correct: 0,
@@ -77,6 +78,11 @@ const Questions = (props) => {
       tempQuestion[currentQuestion].sub_quiz_options[answerIndex].currentAnswer
     setQuestions(tempQuestion)
     setShowNextButton(true)
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start()
     tempQuestion[currentQuestion].guess === 'no' ? Vibration.vibrate(1000) : playSound()
   }
 
@@ -87,6 +93,7 @@ const Questions = (props) => {
     if (currentQuestion < 9) {
       setCurrentQuestion(currentQuestion + 1)
       setShowNextButton(false)
+      setOpacity(new Animated.Value(0))
     } else {
       makeResult()
     }
@@ -181,12 +188,21 @@ const Questions = (props) => {
       </View>
       <View style={styles.nextButton}>
         {showNextButton && (
-          <Button
-            name={currentQuestion === 9 ? 'FINISH' : 'NEXT'}
-            handleSubmit={handleNext}
-            height={RFPercentage(6)}
-            fontSize={RFPercentage(2.7)}
-          />
+          <Animated.View
+            style={{
+              opacity: opacity,
+              transform: [
+                { scale: opacity.interpolate({ inputRange: [0, 1], outputRange: [0.85, 1] }) },
+              ],
+            }}
+          >
+            <Button
+              name={currentQuestion === 9 ? 'FINISH' : 'NEXT'}
+              handleSubmit={handleNext}
+              height={RFPercentage(6)}
+              fontSize={RFPercentage(2.7)}
+            />
+          </Animated.View>
         )}
       </View>
       <View style={styles.homeBanner}>
@@ -234,12 +250,21 @@ const Questions = (props) => {
               />
             </View>
             <View style={styles.nextButton}>
-              <Button
-                name={currentQuestion === 9 ? 'FINISH' : 'NEXT'}
-                handleSubmit={handleNext}
-                height={RFPercentage(6)}
-                fontSize={RFPercentage(2.7)}
-              />
+              <Animated.View
+                style={{
+                  opacity: opacity,
+                  transform: [
+                    { scale: opacity.interpolate({ inputRange: [0, 1], outputRange: [0.85, 1] }) },
+                  ],
+                }}
+              >
+                <Button
+                  name={currentQuestion === 9 ? 'FINISH' : 'NEXT'}
+                  handleSubmit={handleNext}
+                  height={RFPercentage(6)}
+                  fontSize={RFPercentage(2.7)}
+                />
+              </Animated.View>
             </View>
           </>
         )
