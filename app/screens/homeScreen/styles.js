@@ -26,23 +26,31 @@ const styles = StyleSheet.create({
     marginTop: RFPercentage(-4),
   },
 
+  paginationHeading: {
+    paddingLeft: RFPercentage(3.2),
+    paddingTop: RFPercentage(4),
+    paddingBottom: RFPercentage(2),
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '57%',
+    justifyContent: 'space-between'
+  },
+
   heading: {
     fontSize: RFPercentage(3.5),
     fontWeight: '600',
-    marginTop: RFPercentage(5),
-    marginBottom: RFPercentage(1),
-    alignSelf: 'flex-start',
-    marginLeft: RFPercentage(4),
     color: Colors.primary
   },
 
   homeBanner: {
+    backgroundColor: Colors.white,
     position: 'absolute',
     alignItems: 'center',
     bottom: 0,
     left: 0,
     right: 0
-  }
+  },
+
 })
 
 export default styles

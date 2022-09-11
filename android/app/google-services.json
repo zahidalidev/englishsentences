@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:119389437044:android:f5c6ad5b5ac2d18e376521",
         "android_client_info": {
-          "package_name": "com.franciscasao.englishsentences"
+          "package_name": "com.franciscasao.englishspeaking"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "119389437044-h2kqonbi99v03plsf1dhfrgsh1rrrom8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.franciscasao.englishsentences",
+            "package_name": "com.franciscasao.englishspeaking",
             "certificate_hash": "6c33773c5847faca39fdf6c9626bf74cf47f97d4"
           }
         },

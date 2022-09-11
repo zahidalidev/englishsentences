@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   },
 
   homeBanner: {
+    backgroundColor: Colors.white,
     position: 'absolute',
     alignItems: 'center',
     bottom: 0,

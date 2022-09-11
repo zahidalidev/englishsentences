@@ -1,4 +1,4 @@
-package com.franciscasao.englishsentences.newarchitecture;
+package com.franciscasao.englishspeaking.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -20,9 +20,9 @@ import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.franciscasao.englishsentences.BuildConfig;
-import com.franciscasao.englishsentences.newarchitecture.components.MainComponentsRegistry;
-import com.franciscasao.englishsentences.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.franciscasao.englishspeaking.BuildConfig;
+import com.franciscasao.englishspeaking.newarchitecture.components.MainComponentsRegistry;
+import com.franciscasao.englishspeaking.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

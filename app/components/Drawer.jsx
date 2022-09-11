@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
@@ -7,12 +7,12 @@ const Drawer = (props) => (
       <View style={styles.container}>
         <View style={styles.routeBtnWrapper}>
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('Home')}
+           onPress={() => Linking.openURL('https://englishspeaking.in/')}
           activeOpacity={0.7}
           style={styles.routeBtn}
         >
-          <MaterialCommunityIcons name='home' size={RFPercentage(3)} />
-          <Text style={styles.routeName}>Categories</Text>
+          <MaterialCommunityIcons name='web' size={RFPercentage(3)} />
+          <Text style={styles.routeName}>Visit Website</Text>
         </TouchableOpacity>
         </View>
       </View>

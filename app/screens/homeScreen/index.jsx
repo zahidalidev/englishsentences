@@ -1,9 +1,10 @@
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads'
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { Text, View, StatusBar, FlatList, RefreshControl, ScrollView } from 'react-native'
+import { Text, View, StatusBar, FlatList, RefreshControl, TouchableOpacity } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import * as Notifications from 'expo-notifications'
 import Constants from 'expo-constants'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import LoadingModal from '../../components/common/LoadingModal'
 import { Colors } from '../../config/theme'
@@ -88,7 +89,17 @@ const HomeScreen = (props) => {
         <StatusBar backgroundColor={Colors.primary} style='light' />
         <View style={styles.header}></View>
         <View style={styles.bodyContainer}>
-          <Text style={styles.heading}>Categories</Text>
+          <View style={styles.paginationHeading}>
+            <TouchableOpacity onPress={() => props.navigation.openDrawer()}>
+              <MaterialIcons
+                style={styles.backIcon}
+                name='menu-open'
+                size={RFPercentage(4)}
+                color={Colors.primary}
+              />
+            </TouchableOpacity>
+            <Text style={styles.heading}>Categories</Text>
+          </View>
           <FlatList
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             style={{ marginTop: RFPercentage(2), marginBottom: RFPercentage(1), marginLeft: '5%' }}
@@ -102,7 +113,7 @@ const HomeScreen = (props) => {
       </View>
       <View style={styles.homeBanner}>
         <BannerAd
-          unitId={questionBannerId}
+          unitId={'ca-app-pub-3940256099942544/6300978111'}
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
           requestOptions={{
             requestNonPersonalizedAdsOnly: true,

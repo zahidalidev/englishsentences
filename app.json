@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "englishspeaking",
-    "slug": "englishsentences",
+    "name": "English Speaking",
+    "slug": "englishspeaking",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,11 +14,14 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/icon.png",
+          "icon": "./local/assets/notification-icon.png",
           "color": "#ffffff"
         }
       ]
     ],
+    "notification":{
+      "icon": "./assets/icon.png"
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -36,7 +39,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.franciscasao.englishsentences"
+      "package": "com.franciscasao.englishspeaking"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -48,7 +51,7 @@
     }
   },
   "react-native-google-mobile-ads": {
-    "android_app_id": "ca-app-pub-8549462325132397~3242649396",
+    "android_app_id": "ca-app-pub-8549462325132397~5110326760",
     "ios_app_id": "ca-app-pub-8549462325132397~6555060942"
   }
 }
