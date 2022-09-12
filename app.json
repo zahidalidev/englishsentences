@@ -14,13 +14,13 @@
       [
         "expo-notifications",
         {
-          "icon": "./local/assets/notification-icon.png",
+          "icon": "./local/assets/notification.png",
           "color": "#ffffff"
         }
       ]
     ],
     "notification":{
-      "icon": "./assets/icon.png"
+      "icon": "./assets/notification.png"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
