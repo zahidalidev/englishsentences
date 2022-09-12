@@ -4,7 +4,7 @@
     "slug": "englishspeaking",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/notification.png",
     "userInterfaceStyle": "light",
     "splash": {
       "resizeMode": "contain",
