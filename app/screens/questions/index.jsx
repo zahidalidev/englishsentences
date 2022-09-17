@@ -26,11 +26,25 @@ const Questions = (props) => {
   const [sound, setSound] = useState()
   const [showAd, setShowAd] = useState(false)
   const [opacity, setOpacity] = useState(new Animated.Value(0))
+  const [currentCategory, setCurrentCategory] = useState({})
 
   const [result, setResult] = useState({
     correct: 0,
     inCorrect: 0,
   })
+
+  useEffect(() => {
+    if (props.route.params?.subCategory) {
+      setSubCurrentCategory(props.route.params.subCategory)
+      handleGetQuestions(props.route.params.subCategory.id)
+      setCurrentCategory(props.route.params.currentCategory)
+    }
+
+    return () => {
+      setCurrentQuestion(0)
+      setShowResult(false)
+    }
+  }, [props.route.params])
 
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync(successBell)
@@ -45,18 +59,6 @@ const Questions = (props) => {
         }
       : undefined
   }, [sound])
-
-  useEffect(() => {
-    if (props.route.params?.subCategory) {
-      setSubCurrentCategory(props.route.params.subCategory)
-      handleGetQuestions(props.route.params.subCategory.id)
-    }
-
-    return () => {
-      setCurrentQuestion(0)
-      setShowResult(false)
-    }
-  }, [props.route.params])
 
   const handleGetQuestions = async (id) => {
     try {
@@ -122,6 +124,16 @@ const Questions = (props) => {
     setCurrentQuestion(0)
     setShowResult(false)
     handleGetQuestions(props.route.params?.subCategory.id)
+  }
+
+  const handleBack = () => {
+    setCurrentQuestion(0)
+    setShowResult(false)
+    setQuestions([])
+    setShowAd(false)
+    props.navigation.navigate('SubCategories', {
+      category: currentCategory
+    })
   }
 
   const QuestionComponent = () => (
@@ -217,12 +229,6 @@ const Questions = (props) => {
     </>
   )
 
-  const handleBack = () => {
-    setCurrentQuestion(0)
-    setShowResult(false)
-    props.navigation.navigate('SubCategories')
-  }
-
   return (
     <View style={styles.container}>
       <LoadingModal show={loading} />
@@ -272,7 +278,7 @@ const Questions = (props) => {
         <Result
           result={result}
           handleAgainTest={handleAgainTest}
-          handleMoreExercises={() => props.navigation.navigate('SubCategories')}
+          handleMoreExercises={handleBack}
         />
       )}
     </View>

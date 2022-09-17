@@ -7,7 +7,7 @@ const Drawer = (props) => (
       <View style={styles.container}>
         <View style={styles.routeBtnWrapper}>
         <TouchableOpacity
-           onPress={() => Linking.openURL('https://englishspeaking.in/')}
+           onPress={() => Linking.openURL('https://englishsentences.in/')}
           activeOpacity={0.7}
           style={styles.routeBtn}
         >

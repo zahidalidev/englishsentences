@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from 'react'
-import { Text, View, StatusBar, FlatList, RefreshControl, TouchableOpacity } from 'react-native'
+import { useEffect, useState } from 'react'
+import { Text, View, StatusBar, FlatList, TouchableOpacity } from 'react-native'
 import { RFPercentage } from 'react-native-responsive-fontsize'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -15,31 +15,26 @@ import { questionBannerId } from '../../config/adIds'
 const SubCategories = (props) => {
   const [subCategories, setSubCategories] = useState([])
   const [loading, showLoading] = useState(false)
-  const [refreshing, setRefreshing] = useState(false)
   const [currentCategory, setCurrentCategory] = useState({})
   const [page, setPage] = useState(1)
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    handleGetSubCategories()
-    setRefreshing(false)
-  }, [])
 
   useEffect(() => {
     if (props.route.params?.category) {
       setCurrentCategory(props.route.params.category)
-      handleGetSubCategories()
+      handleGetSubCategories(1, props.route.params.category.id)
     }
 
     return () => {
       setPage(1)
+      setSubCategories([])
+      setCurrentCategory({})
     }
   }, [props.route.params])
 
-  const handleGetSubCategories = async () => {
-    showLoading(true)
+  const handleGetSubCategories = async (currentPage = page, id) => {
     try {
-      const { data } = await fetchSubCategories(page, props.route.params?.category.id)
+      showLoading(true)
+      const { data } = await fetchSubCategories(currentPage, id)
       setSubCategories(data.data)
     } catch (error) {
       console.log({ message: 'Sub categories not found' }, error)
@@ -50,6 +45,7 @@ const SubCategories = (props) => {
   const handleCategory = (subCategory) => {
     props.navigation.navigate('Questions', {
       subCategory,
+      currentCategory,
     })
   }
 
@@ -58,7 +54,7 @@ const SubCategories = (props) => {
     const newPage = page + 1
     setPage(newPage)
     try {
-      const { data } = await fetchSubCategories(newPage, currentCategory.id)
+      const { data } = await fetchSubCategories(newPage, currentCategory?.id)
       setSubCategories([...subCategories, ...data.data])
     } catch (error) {
       console.log({ message: 'Sub categories not found' }, error)
@@ -82,12 +78,11 @@ const SubCategories = (props) => {
                 color={Colors.primary}
               />
             </TouchableOpacity>
-            <Text style={styles.heading}>{currentCategory.title}</Text>
+            <Text style={styles.heading}>{currentCategory?.title}</Text>
           </View>
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           style={{ marginTop: RFPercentage(2) }}
           data={subCategories}
           renderItem={({ item }) => <SubCategoryCard item={item} handleCategory={handleCategory} />}
